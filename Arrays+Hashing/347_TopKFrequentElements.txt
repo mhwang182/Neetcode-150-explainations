@@ -1,0 +1,42 @@
+Given an integer array nums and an integer k, return the k most frequent elements. You may return the answer in any order.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1,2,2,3], k = 2
+Output: [1,2]
+Example 2:
+
+Input: nums = [1], k = 1
+Output: [1]
+
+Steps:
+
+    - Count the freq of each num in the list
+        - Use python counter (from collections import Counter)
+    - initialize a Min Heap (all python heaps are min heaps btw)
+        - min_heap = []
+    - iterate through the Counter and add the count and the number to the min_heap
+        - heapq.heappush(min_heap, (count, num))
+        - if the length of the heap is greater than k, then pop the min from the heap
+            - this will ensure that only the top K are stored in the heap
+    - iterate throught the heap and append the number to the result list
+    
+
+    def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        # get counts per number
+        count_map = Counter(nums)
+
+        min_heap = []
+
+        for num, count in count_map.items():
+            heapq.heappush(min_heap, (count, num))
+            if(len(min_heap) > k):
+                heapq.heappop(min_heap)
+        
+        res = []
+        for tup in min_heap:
+            res.append(tup[1])
+        
+        return res
