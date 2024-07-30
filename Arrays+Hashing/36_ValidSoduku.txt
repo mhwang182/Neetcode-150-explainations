@@ -1,0 +1,39 @@
+Notes:
+    initialize set in python: hash_set = set()
+    floor: math.floor()
+
+    implement with one set, think about how to make elements unique and disguishable 
+    (aka store value and row/col/box info in a single string)
+
+steps:
+    - initialize single set
+    - loop through the matrix
+    - if val at r,c not equals "."
+        - create a key for each val
+            - row key: "val-row-1"
+            - col key: "val-col-1"
+            - box key: "val-sect-00"
+        - check if any of these keys already in set, if so return False
+        - add all keys to the set
+
+    - return True if completed
+
+
+def isValidSudoku(self, board: List[List[str]]) -> bool:
+        
+        hash_set = set()
+
+        for r in range(0, 9):
+            for c in range(0, 9):
+                val = board[r][c]
+                if(val != "."):
+                    key = "-sect" + str(math.floor(r/3)) + str(math.floor(c/3))
+                    if(str(val) + "-row-" + str(r) in hash_set or
+                       str(val) + "-col-" + str(c) in hash_set or
+                       str(val) + key in hash_set):
+                       return False
+                    hash_set.add(str(val) + "-row-" + str(r))
+                    hash_set.add(str(val) + "-col-" + str(c))
+                    hash_set.add(str(val) + key)
+        return True
+
