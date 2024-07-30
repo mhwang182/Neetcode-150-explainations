@@ -1,0 +1,36 @@
+Notes:
+
+    Since we can ignore duplicates we only need to iterate through the set not the list
+    because there could be an infinite amount of duplicates increasing the runtime
+
+Steps:
+    - initialize a set
+    - iterate through the list of numbers and add each to the set
+
+    - iterate through the set
+        - if the current number minus 1 is in the set we skip it
+            - this is because we want to find the start of the consecutive sequence. if the number before it is present
+              then it isnt the start
+        - if the current number is the start, create while loop and count how many consecutives are in the set
+            - set the current max count
+    
+
+def longestConsecutive(self, nums: List[int]) -> int:
+    result = 0
+    
+    num_set = set()
+
+    for i in range(0, len(nums)):
+        num_set.add(nums[i])
+
+    for num in num_set:
+        if(num - 1 in num_set):
+            continue
+        count = 1
+        next_num = num + 1
+        while(next_num in num_set):
+            count += 1
+            next_num += 1
+        result = max(count, result)
+    
+    return result
