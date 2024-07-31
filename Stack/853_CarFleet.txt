@@ -1,0 +1,48 @@
+Notes:
+    - Keep in mind that it is a one lane road therefore no cars can pass, they will be stuck behind the one in front
+
+    - Picture the cars on a line aka sort the array
+    - Since the car closest to the target will hold back all the faster ones behind, the faster cars will be in the fleet
+      of the closest car
+
+    - if they arent faster they will be their own fleet limiter
+
+    - you can figure out which cars behind are faster by calculating the arrival time aka distance_remaining/speed
+
+
+Steps:
+    - initialize a list for pairs
+    - iterate through the position and speed lists and append the value of both to the pairs list
+    - sort the pairs list in ascending order
+    - initialize variable as 0 called arrival_time_limit (represents the car ahead's arrival time)
+    
+    - while the pairs list is not empty
+        - pop from the end of the pairs list
+        - calculate the arrival time of the car
+        - if the arrival time is greater than than the arrival_time_limit (aka the car is sower than the fleet ahead)
+            - it means the current car is starting a new fleet
+            - set the arrival_time_limit to the arrival time of the car
+            - incremenent the number of fleets
+        - else
+            - do nothing, the car is already popped so it is part of the fleet ahead
+    
+    - return number of fleets
+
+
+def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
+    pairs = []
+    for i in range(0, len(position)):
+        pairs.append((position[i], speed[i]))
+
+    pairs = sorted(pairs)[::1] #sort asc
+    arrival_time_limit = 0
+    fleets = 0
+    while(pairs):
+        pos, speed = pairs.pop()
+        arrival_time = (target-pos)/speed
+        if(arrival_time > arrival_time_limit):
+            fleets += 1
+            arrival_time_limit = arrival_time
+            continue
+
+    return fleets
