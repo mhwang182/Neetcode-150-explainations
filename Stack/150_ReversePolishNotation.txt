@@ -1,0 +1,44 @@
+Notes:
+
+    if you want the integer value of a division, use math.trunc ***
+
+Steps:
+    - initialize a stack as a list
+    - loop through the tokens list from the start
+        - if the current char is a number, append it to the stack
+        - else if the char is a math operator
+            - pop the 2 latest numbers off the stack
+            - perform the operation on the 2 numbers
+            - push the result to the top of the stack
+    - return the only remaining value as the result as an integer
+
+
+
+
+def evalRPN(self, tokens: List[str]) -> int:
+    stack = []
+
+    for i in range(0, len(tokens)):
+        if(tokens[i] not in "+-*/"):
+            stack.append(tokens[i])
+        else:
+            b = int(stack.pop())
+            a = int(stack.pop())
+
+            if(tokens[i] == '+'):
+                stack.append(a + b)
+                continue
+            if(tokens[i] == '-'):
+                stack.append(a - b)
+                continue
+            if(tokens[i] == '*'):
+                stack.append(a * b)
+                continue
+            if(tokens[i] == '/'):
+                stack.append(math.trunc(a/b))
+                continue
+            
+    if(len(stack) != 1):
+        return 0
+
+    return int(stack[0])
