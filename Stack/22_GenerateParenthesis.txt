@@ -1,0 +1,80 @@
+Notes:
+
+    think about the number of open parenthesis. No need to count both left and right just count number of open
+
+
+Steps:
+    - initialize list for the stack and another for the result
+    - implement backtracking method
+        - in the args keep track of the number of open parenthesis
+        - Basecases: 
+            - if the number of open is negative (aka more right than left), return
+            - if the number of open is more than n (aka more open than allowed), return
+            - if the number len of the stack == n*2 (aka full amount of parens) and the number of open is 0
+                (aka all lefts are closed by a right) then append sequence to the result
+            
+        - Recursion:
+            - append a right to the stack
+            - increase open counter aka +1
+            - backtrack
+            - pop from the stack
+
+            - append a left to the stack
+            - decrease open counter aka -1
+            - backtrack
+            - pop from the stack
+
+
+def generateParenthesis(self, n: int) -> List[str]:
+    stack = ['(']
+    res = []
+
+    def backtrack(num_open):
+        #if complete add to result
+        if(len(stack) > n*2):
+            return
+
+        if(num_open < 0):
+            return
+        if(num_open > n):
+            return
+
+        if(len(stack) == n*2 and num_open == 0):
+            res.append("".join(stack))
+            return
+
+        stack.append('(')
+        backtrack(num_open + 1)
+        stack.pop()
+        
+        stack.append(')')
+        backtrack(num_open - 1)
+        stack.pop()
+
+    backtrack(1)
+
+    return res
+
+non recursive solution:
+
+def generateParenthesis(self, n: int) -> List[str]:
+    stack = [('(', 1)]
+    res = []
+
+    while stack:
+        curr, num_open = stack.pop()
+
+        if(num_open > n or num_open < 0):
+            continue
+
+        if(len(curr) > n*2):
+            continue
+
+        if(len(curr) == n*2 and num_open == 0):
+            res.append(curr)
+            continue
+        
+        stack.append((curr + '(', num_open + 1))
+        stack.append((curr + ')', num_open - 1))
+    
+    return res
