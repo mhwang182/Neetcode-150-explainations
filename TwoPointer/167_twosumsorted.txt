@@ -1,0 +1,11 @@
+Notes:
+- Read carefully, the array is 1 indexed
+
+Steps:
+- initialize left and right pointers at 0 and start
+- while left < right
+    - calculate sum of left + right 
+    - if sum less than target, left += 1
+    - if sum is greater than target, right -= 1
+    - if sum equals target, return [left + 1, right + 1]  (remmeber array is 1 indexed)
+
