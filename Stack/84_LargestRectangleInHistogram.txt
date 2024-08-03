@@ -1,0 +1,56 @@
+Notes:
+
+    - The stack in this problem will store the starting index and the height (as tuple) for a rectangle
+    - The goal of this problem is not to think to store indexes or bars in the stack but to store complete rectangles
+
+    - The stack should only store rectangles that can be extended forward since the area can increase and create a larger area
+    - This means the stack should store rectangles that are strictly increasing in height
+    - Once we find a bar that has a height less than the tallest rect in the stack, we must
+      see how much the rectangles extended until the current index (aka index - start) and calculate the area
+
+    - Since all the popped rectangles were taller than the current, we can say that the rectangle starts where the last
+      taller one started since we can extend back until there is a shorter rectangle
+    
+
+Steps: 
+
+    - initailize stack, max_area = 0, and append -1 to the heights list
+    - enumerate through the heights list
+        - if the stack is empty append the index and height of the current bar, consider area of current bar
+        - else
+            - while the stack isnt empty and the rect at end of stack is taller than current bar
+                - pop from stack
+                - calculate area 
+                    - current bar index - start * height
+                - compare to max_area
+                - update the start of the rect that will rep the current bar
+            - append new start and current bar height to stack
+
+def largestRectangleArea(self, heights):
+    """
+    :type heights: List[int]
+    :rtype: int
+    """
+
+    stack = []
+    heights.append(-1)
+    max_area = 0
+    for i, h in enumerate(heights):
+
+        curr_start = i
+        curr_area = h
+        max_area = max(max_area, curr_area)
+
+        if(not stack):
+            stack.append((i, h))
+            continue
+        
+        while stack and stack[-1][1] > h:
+            start, left_height = stack.pop()
+            w = i - start
+            area = left_height * w
+            max_area = max(max_area, area)
+            curr_start = start
+        stack.append((curr_start, h))
+
+    return max_area
