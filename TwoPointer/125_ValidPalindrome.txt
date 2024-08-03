@@ -1,0 +1,3 @@
+- filter out non alphanumberic (filter(lambda x: x.isalnum(), s))
+
+- left, right pointer, check then increment/decrement
