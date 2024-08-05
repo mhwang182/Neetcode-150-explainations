@@ -1,0 +1,55 @@
+Notes:
+- First step is to sort
+- Once sorted, problem becomes going through every number then performing a 2SumSorted on the remaining array
+- The trick in the problem is how to handle duplicate triplets
+    - for duplicate starting numbers, just skip the duplicates so never does a 2Sum on duplicates
+    - for duplicates in the 2Sum portion
+        - increment left pointer until no longer duplicate
+        - decrement right pointer until no longer duplicate
+    
+Steps:
+- Sort the list
+- for loop through each element in list
+    - if duplicate, skip
+    - else do a 2SumSorted on the remainder of the list
+        - left = i + 1, right = len(nums) - 1
+        - if nums[left] + right == 0 - nums[i], found a triplets add to result
+            - while loop increment left until no longer a duplicate
+            - while loop decrement right until no longer a duplicate
+
+        - continue looping
+
+
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+    nums = sorted(nums)
+
+    res = []
+    
+    for i in range(0, len(nums)):
+        left = i + 1
+        right = len(nums) - 1
+        if(left >= len(nums)):
+            continue
+        
+        if i > 0 and nums[i] == nums[i - 1]:
+            continue
+        
+        target = 0 - nums[i]
+        while left < right:
+            curr_sum = nums[left] + nums[right]
+            if(curr_sum < target):
+                left += 1
+                continue
+            if(curr_sum > target):
+                right -= 1
+                continue
+            res.append([nums[i], nums[left], nums[right]])
+            left_val = nums[left]
+            right_val = nums[right]
+            while left < len(nums)-1 and nums[left] == left_val:
+                left += 1
+            
+            while right > 0 and nums[right] == right_val:
+                right -= 1
+        
+    return res
