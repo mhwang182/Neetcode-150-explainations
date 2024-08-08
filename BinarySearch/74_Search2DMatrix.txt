@@ -1,0 +1,49 @@
+Notes:
+
+- Make sure to consider all the edge cases, aka what to do when the matrix has only one element etc... 
+- Trick is to do binary search on the first column, then binary search on the row from the previous binary search
+
+
+Steps: 
+- Binary Search on the first column of the matrix
+    - if the target is found in the search return True
+- The right pointer will be the largest number less than the target, so we know to search on that row
+- If the right pointer is larger than the target return false because target doesnt exist, also if right pointer is out of bounds
+- Binary Search on the row of the right pointer return True if target found on that row
+
+
+def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+    l = 0; r = len(matrix) - 1
+
+    while(l <= r):
+        m = math.trunc((l + r) / 2)
+        curr = matrix[m][0]
+        if(curr > target):
+            r = m - 1
+            continue
+        if(curr < target):
+            l = m + 1
+            continue
+        return True
+    
+    if(r >= len(matrix) or matrix[r][0] > target):
+        return False
+
+    row = r
+    l = 0; r = len(matrix[row]) - 1
+
+    if(l == r):
+        return matrix[row][l] == target
+
+    while l <= r:
+        m = math.trunc((l + r)/2)
+        curr = matrix[row][m]
+        if curr < target:
+            l = m + 1
+            continue
+        if curr > target:
+            r = m - 1
+            continue
+        return True
+    
+    return False
