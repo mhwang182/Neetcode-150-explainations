@@ -1,0 +1,26 @@
+Notes: 
+- Initialize left pointer to 1 because list could have only 1 element
+- Remember that when h is lower we need slower k, when h is higher we need faster k
+- goal is to find the largest k where hours <= has
+
+def minEatingSpeed(self, piles: List[int], h: int) -> int:
+    def hoursToFinish(speed):
+        hours = 0
+        for x in piles:
+            hours += math.ceil(float(x)/speed)
+        return hours
+
+    l = 1
+    r = max(piles)
+    res = r
+    while l <= r:
+        k = (l + r)//2
+        hours = hoursToFinish(k)
+
+        if(hours <= h): #need to search for smaller k
+            res = k
+            r = k - 1
+        else:
+            l = k + 1
+
+    return res
