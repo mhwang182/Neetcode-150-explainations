@@ -1,0 +1,39 @@
+Notes:
+- The key to binary search is figure out how to determine which half to search in
+- When you determine how to decide which half, make sure to choose that half only if every condition to be in the half is met
+
+Steps:
+
+- Binary Search structure
+- If nums[mid] is greater than the nums[left] then we know that left to mid is the left sorted portion of the array
+    - Therefore if target is less than nums[mid], it could be in the left sorted portion
+    - BUT just because its less than does not guarentee that it is. ONLY if target is also greater than nums[left] can we
+      guarentee that target is in the left sorted porition. Other wise we can search the other half
+- Else if nums[mid] is less than nums[left] we know that mid to right is the right sorted portion
+    - Therefore if the target is greater than nums[mid] AND ALSO less than nums[right] can we be sure to search the right sorted portion
+    - Otherwise search the other portion
+
+def search(self, nums: List[int], target: int) -> int:
+    left = 0; right = len(nums) - 1
+
+    while left <= right:
+        mid = (left + right)//2
+        if nums[left] == target:
+            return left
+        if nums[mid] == target:
+            return mid
+        if nums[right] == target:
+            return right
+
+        if nums[mid] > nums[left]:
+            if target < nums[mid] and target > nums[left]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if target > nums[mid] and target < nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+
+        return -1
