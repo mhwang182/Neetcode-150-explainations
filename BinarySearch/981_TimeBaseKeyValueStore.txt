@@ -1,0 +1,45 @@
+Notes:
+- THINK OF THE DAMN EDGE CASES 
+- aka what if the timestamp is less than the first time stamp, what if its greater than the biggest?
+
+Steps:
+- Initialize map with key as key and value as list of tuples
+- Set: Append to list for key
+- Get: Binary search on the timestamps
+
+
+
+def __init__(self):
+    self.key_map = {}
+
+def set(self, key: str, value: str, timestamp: int) -> None:
+    if(key in self.key_map):
+        self.key_map[key].append((value, timestamp))
+        return
+
+    self.key_map[key] = [(value, timestamp)]
+
+def get(self, key: str, timestamp: int) -> str:
+    if(key not in self.key_map or timestamp < self.key_map[key][0][1]):
+        return ""
+
+    if(timestamp >= self.key_map[key][-1][1]):
+        return self.key_map[key][-1][0]
+    
+    left = 0; right = len(self.key_map[key]) - 1
+    closest = right
+    while left <= right:
+        mid = (left + right)//2
+        mid_timestamp = self.key_map[key][mid][1]
+        mid_value = self.key_map[key][mid][0]
+
+        if mid_timestamp == timestamp:
+            return mid_value
+
+        if mid_timestamp < timestamp:
+            closest = mid
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return self.key_map[key][closest][0]
