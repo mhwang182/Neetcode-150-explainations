@@ -1,0 +1,69 @@
+Notes:
+
+- The key to this problem is to think about it with the goal of finding how to make the partition left of the median
+- Since we have 2 sorted lists, if we start at the middle of the smaller list, we know how many we need from the other list to
+  complete the partition
+  But we need to make sure that the partition is valid so we check if the values at the ends of the partitions are
+  less than the values to the right on the other side
+  If the smaller partition ends in a number greater than the number to the right of the end of the other list, then the smaller
+  partition is too large, so we know to binary search to the left and vice versa
+
+
+Steps:
+
+- initialize lists A, B. swap A and B so that A is the shorter list
+- initialize left = 0; right = len(A) - 1
+- While True:
+    - get the mid of A. call it end_A, this will be the end of the partition of list A
+    - find the end_B, this will be half - end_A - 2
+
+    - Aleft will be A[end_A], Aright will be A[end_A + 1]
+    - Bleft will be B[end_B], Bright will be B[end_B + 1]
+
+    - If end_A < 0, then that means none of the numbers in A are good so Aleft should be -Inf because we want to make sure Aleft always < Bright
+    - If end_A + 1 >= len(A) that means all of the numbers in A are good so Aright should be Inf because we want to make sure that Bleft always < Aright
+    - If end_B < 0 then that means none of B are good so Bleft = -Inf so Aright always > Bleft
+    - If end_B + 1 >= len(B) that means all of B are good so keep searching in A so Bright = Inf so Aleft always < Bright
+
+
+    - If Aleft <= Bright and Bleft <= Aright then parition is correct:
+        - If odd total:
+            return min(Aright, Bright)
+        else return (max(Aleft, Bleft) + min(Aright, Bright))/2
+    - If Aleft > Bright, A partition is too big so we need to reduce
+        - right = end_A - 1
+    - Else, partition A is too small, end_A needs to be pushed back
+        - left = end_A + 1
+
+
+ def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+
+    A, B = nums1, nums2
+    total = len(nums1) + len(nums2)
+    partition_size = total // 2
+
+    if len(B) < len(A):
+        A, B = B, A
+    
+    left = 0; right = len(A) - 1
+
+    while True:
+        end_A = (left + right)//2
+        # numbers_remaining = partition_size - (partition_end_A + 1)
+        end_B = partition_size - end_A - 2
+
+        Aleft = A[end_A] if end_A >= 0 else float("-infinity")
+        Aright = A[end_A + 1] if (end_A+1) < len(A) else float("infinity")
+        Bleft = B[end_B] if end_B >= 0 else float("-infinity")
+        Bright = B[end_B + 1] if (end_B+1) < len(B) else float("infinity")
+
+        #how do we know the partition is valid? check the values after the ends
+
+        if Aleft <= Bright and Bleft <= Aright: #partition correct
+            if total % 2:
+                return min(Aright, Bright)
+            return (max(Aleft, Bleft) + min(Aright, Bright)) / 2
+        elif Aleft > Bright:
+            right = end_A - 1
+        else:
+            left = end_A + 1
