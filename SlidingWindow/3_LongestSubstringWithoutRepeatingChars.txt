@@ -1,0 +1,31 @@
+Approach:
+- initialize a hashmap dict. this will store all the letters in the current substring
+- Keep a left pointer that starts at 0.
+- Iterate in a for loop, index i will represent the right pointer
+    - keep track of the length of left to i and continue
+    - else, we've found a duplicate and need to remove it
+        - while left pointer is less than i
+            - remove s[left] from the map. save to var char
+            - increment left
+            - if char == s[i], stop loop
+    - add s[i] to the map
+
+- return greatest length recorded
+
+def lengthOfLongestSubstring(self, s: str) -> int:
+    hashmap = {}
+    res = 0
+    left = 0
+
+    for i in range(0, len(s)):
+        if s[i] not in hashmap:
+            res = max(i - left + 1, res)
+        else:
+            while left < i:
+                char = s[left]
+                del hashmap[char]
+                left += 1
+                if char == s[i]:
+                    break
+        hashmap[s[i]] = True
+    return res
