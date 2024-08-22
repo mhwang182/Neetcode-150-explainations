@@ -1,0 +1,52 @@
+Notes:
+- In order to find out how many can be replaced in a substring, we need to keep count of the most occuring char
+    - Every time we reach a new char, we increment the count and also check if its the most occuring
+    - Then the find how many can be replaced, subtract total substring size with the most occuring count
+
+
+Steps:
+- Initialize hashmap, left pointer, maxLength
+- for loop through s, i will be the right pointer
+    - increase count of s[i]
+    - update most occuring count based on count of s[i]
+    - find count of remaining char
+    - if remaining count <= k, record length and continue
+    - else
+        while remaining count > k
+            - decrement count s[left]
+            - increment left pointer
+            - find temp new most occuring count
+            - update most occuring count
+            - update remaining count
+
+def characterReplacement(self, s: str, k: int) -> int:
+        
+    hashmap = {}
+    left = 0
+    maxLength = 0
+    most_occuring_count = 0
+
+    for i in range(0, len(s)):
+        if s[i] not in hashmap:
+            hashmap[s[i]] = 1
+        else:
+            hashmap[s[i]] += 1
+        
+        most_occuring_count = max(most_occuring_count, hashmap[s[i]])
+
+        length = (i - left + 1)
+
+        if length - most_occuring_count <= k:
+            maxLength = max(maxLength, length)
+            continue
+
+        while length - most_occuring_count > k:
+            hashmap[s[left]] -= 1
+            left += 1
+            temp = 0
+            for char in hashmap:
+                temp = max(temp, hashmap[char])
+            most_occuring_count = temp
+            length = (i - left + 1)
+            
+    return maxLength
