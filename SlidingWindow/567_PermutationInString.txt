@@ -1,0 +1,61 @@
+Notes:
+- Make sure to consider edge cases
+
+Steps:
+- initialize array with 26 zeroes. One for s1 and another for the window substring. These will keep track of character counts
+- loop through s1 and count chars in the array. loop through the first window in s2 and count its chars
+- initialize left and right pointers. left = 0, right = len(s1) - 1. These will represent the current window
+- While True
+    - check if the window is a permutation of s1. Return True if so
+    - increment left
+    - increment right
+    - if right out of bounds, break from loop
+    - decrement the count of s[left - 1] and increment the count of s[right] in the substring count array
+
+- Return False at end
+
+
+def checkInclusion(self, s1: str, s2: str) -> bool:
+        
+    #initialize left and right to be size of s1
+    #while right < len(s2)
+
+    #check if permutation
+
+    #increment left increment right
+    #decrease old left count increase new right count
+
+    if(len(s1) > len(s2)):
+        return False
+        
+    counts_s1 = [0] * 26
+    counts_sub = [0] * 26
+
+    for i in range(0, len(s1)):
+        counts_s1[ord(s1[i]) - ord('a')] += 1
+    
+    for i in range(0, len(s1)):
+        counts_sub[ord(s2[i]) - ord('a')] += 1
+
+    def check_permutation():
+        for i in range(0, 26): ##O(1)
+            if counts_s1[i] != counts_sub[i]:
+                return False
+        return True
+
+    left, right = 0, len(s1) - 1
+
+    while True:
+        if check_permutation():
+            return True
+
+        left += 1
+        right += 1
+
+        if right >= len(s2):
+            break
+        
+        counts_sub[ord(s2[left - 1]) - ord('a')] -= 1
+        counts_sub[ord(s2[right]) - ord('a')] += 1
+
+    return False
