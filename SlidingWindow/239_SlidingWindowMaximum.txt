@@ -1,0 +1,43 @@
+Notes:
+- Use a deque. The deque will contain indexes because position matters
+- Deque should be stricly decreasing, so the first element will represent the biggest in the sequence
+- Maintain that all elements in the deque are in the bounds of the window
+
+Steps:
+- initialize the deque
+- initialize empty results array
+- for loop through the nums array, index i
+    - while deque not empty and front of deque outside of window:
+        - pop from left
+    
+    - while deque not empty and value at end less than new value (nums[i]): // maintain stricly decreasing
+        - pop from right
+
+    - append nums[i] to the back of the queue
+
+    - if i is exactly the end of the first window or greater
+        - append the front of the deque to results array since the front will always represent the largest within bounds
+- return result
+
+
+
+def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+
+    dq = collections.deque()
+    res = []
+
+    for i in range(0, len(nums)):
+        
+        window_start = i - k + 1
+        while dq and dq[0] < window_start:
+            dq.popleft()
+        
+        while dq and nums[dq[-1]] < nums[i]:
+            dq.pop()
+        
+        dq.append(i)
+
+        if i >= k - 1:
+            res.append(nums[dq[0]])
+    
+    return res
