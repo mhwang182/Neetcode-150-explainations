@@ -1,0 +1,67 @@
+Notes:
+- Trick is to keep track of the counts of every char we need. If the count of every char we need is <= 0, then the window has every char
+- We need to keep track of the count of missing chars. Every time the number of a char we still need is > 0 and we currently found one,
+  we can decrease the missing count because we found something we need. If missing count equals 0 thats when we know the search is complete
+
+
+Steps:
+- initialize a needs counter, needs = collections.Counter(t)
+- initialize missing_count = len(t), the number of chars we need
+- start pointer = 0
+- enumerate through s: char, end
+    - if char is in needs
+        - if needs[char] > 0, aka we still need
+            - decrement missing
+        - decrement needs[char] //can be negative, just means we have more than we need and shouldnt decrease missing if we find another
+
+    - if missing == 0 //we found everything we need
+        - while True
+            - get current substring 
+            - increment start
+            - if s[start -1] is a char we need
+                - increment needs[s[start -1]] //if negative then we still have enough after adding
+                - if needs[s[start -1]] > 0
+                    - missing += 1
+            - if missing > 0, break
+
+- return shortest substring
+
+
+def minWindow(self, s: str, t: str) -> str:
+
+    if len(s) < len(t):
+        return ""
+
+    needs = collections.Counter(t)
+    print(needs)
+    missing = len(t)
+
+    start = 0
+
+    res_start = 0; res_end = len(s) - 1 
+    found = False
+
+    for end, char in enumerate(s):
+        if char in needs:
+            if needs[char] > 0:
+                missing -= 1
+            needs[char] -= 1
+
+        if missing == 0: 
+            while True:
+                found = True
+                if (end - start + 1) < (res_end - res_start + 1):
+                    res_end = end
+                    res_start = start
+                start += 1
+
+                if s[start - 1] in needs:
+                    needs[s[start - 1]] += 1
+                    if needs[s[start - 1]] > 0:
+                        missing += 1
+                
+                if missing > 0:
+                    break
+    if not found:
+        return ""
+    return s[res_start: res_end + 1]
