@@ -1,0 +1,40 @@
+Notes:
+- pretty intuitive, just understand what conditions mean nth from end is the first node
+
+Steps:
+- initilize fast, slow, and prev pointers
+
+- iterate fast pointer to be n ahead of the slow
+
+- if fast is null, aka when the start is the nth from end
+    - return head.next
+
+- while fast not at the end of list aka not null
+    - prev points to slower
+    - interate slow 
+    - iterate fast
+
+- prev.next = slow.next , aka cut out the slow pointer node
+
+- return head
+
+
+def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+
+    fast = head
+    slow = head
+    prev = None
+
+    for i in range(0, n):
+        fast = fast.next
+    
+    if not fast:
+        return head.next
+
+    while fast:
+        prev = slow
+        slow = slow.next
+        fast = fast.next
+    
+    prev.next = slow.next
+    return head
