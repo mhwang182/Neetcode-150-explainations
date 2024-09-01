@@ -1,0 +1,86 @@
+Notes:
+- Approach pretty straighforward although seemed unoptimal at first
+
+Steps (High level):
+- using slow and fast pointer, find the node where the second half of the list starts. seperate the halves
+- reverse the second half using the standard reversal algorithm
+- merge the two lists in the reordered order
+
+Steps (Low level):
+- slow = head
+- fast = head.next.next , start the fast pointer one step ahead so the slow ends one node before the middle so we can easily separte.
+- while fast not null
+    - iterate slow
+    - iterate fast
+
+- set mid pointer for start of the second half
+- separate the halves
+
+- set prev, curr, and nxt pointers for reversal
+- while curr not null
+    - set curr.next to prev
+    - set prev to curr
+    - set curr to nxt
+    - set nxt to curr next
+
+- prev is now reversed list. lets call it rev now
+- set end pointer to be the current in rev
+
+- set pointers curr to head and nxt to head.next
+
+- while end not null
+    - iterate rev to next
+    - end.next = nxt
+    - curr.next = end
+    - curr = nxt
+    - nxt = curr.next
+    - end = rev
+
+
+def reorderList(self, head: Optional[ListNode]) -> None:
+
+    if not head.next:
+        return head
+
+    slow = head
+    fast = head.next.next
+
+    while fast:
+        slow = slow.next
+        if not fast.next:
+            break
+        fast = fast.next.next
+    
+
+    mid = slow.next
+    slow.next = None
+
+    rev = None
+    curr = mid
+    nxt = mid.next
+
+    while curr:
+        nxt = curr.next
+        curr.next = rev
+        rev = curr
+        curr = nxt
+    
+    curr = head
+    nxt = curr.next
+
+    end = rev
+
+    while end:
+        rev = rev.next
+
+        end.next = nxt
+        curr.next = end
+        curr = nxt
+        
+        end = rev
+
+        if not curr:
+            break
+            
+        nxt = curr.next
+            
