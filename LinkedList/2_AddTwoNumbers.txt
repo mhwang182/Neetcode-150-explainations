@@ -1,0 +1,42 @@
+Notes:
+- Pretty intuitive
+
+Steps:
+- while either l1 or l2 not null
+    - set current sum to 0
+    - if l1, add to current sum, l1 = l1.next
+    - if l2, add to current sum, l2 = l2.next
+    - set carry over if current sum > 10
+    - set current val as current sum remainder 10
+    - if both l1 and l2 currently null, then we reach the end of both numbers
+        - if the current sum >= 10, then we need to add two nodes. one with the remainder and one with the carry
+    - else, add the remainder as new node to list and continue
+
+
+def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+
+    carry = 0
+    sum_node = ListNode(0)
+    res = sum_node
+    while l1 or l2:
+        curr_sum = carry
+        if l1:
+            curr_sum += l1.val
+            l1 = l1.next
+        if l2:
+            curr_sum += l2.val
+            l2 = l2.next
+        
+        carry = curr_sum // 10
+        curr_val = curr_sum % 10
+
+        if not l1 and not l2:
+            if curr_sum >= 10:
+                sum_node.next = ListNode(curr_val)
+                sum_node.next.next = ListNode(carry)
+                break
+        
+        sum_node.next = ListNode(curr_val)
+        sum_node = sum_node.next
+
+    return res.next
