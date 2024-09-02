@@ -1,0 +1,52 @@
+Notes:
+- Trick is to store nodes in a hashmap with key as the original node and the value as the new copy node
+
+Steps:
+- initialize hashmap and node pointers
+- iterate through the original list
+    - create new node with value of the current original node
+    - add new node to the copy list
+    - add new entry to hashmap with original current node as key and the value as the new created node
+    - continue until no more original nodes
+
+- iterate through the original list again
+    - if the random pointer of the current node is null, set the copy node random to null
+    - else, get the copy node of the current node's random node from the hashmap, 
+        set the random node of the copy node to the hashmap value
+
+- return the copy list
+
+
+def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+
+    if not head:
+        return None
+    
+
+    hashmap = {}
+    curr = head
+    new = Node(0, None, None)
+    new_head = new
+
+    while curr:
+        new_node = Node(curr.val, None, None)
+
+        new.next = new_node
+        new = new_node
+        
+        hashmap[curr] = new_node
+        
+        curr = curr.next
+
+    curr = head
+    curr_new = new_head.next
+
+    while curr:
+        if not curr.random:
+            curr_new.random = None
+        else:
+            curr_new.random = hashmap[curr.random]
+        curr = curr.next
+        curr_new = curr_new.next
+
+    return new_head.next
