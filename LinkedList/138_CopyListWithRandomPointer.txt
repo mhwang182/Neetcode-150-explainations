@@ -25,7 +25,7 @@ def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
 
     hashmap = {}
     curr = head
-    new = Node(0, None, None)
+    new = Node(0, None, None) #dummy node
     new_head = new
 
     while curr:
