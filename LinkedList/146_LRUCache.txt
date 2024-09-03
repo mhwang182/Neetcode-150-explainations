@@ -1,0 +1,108 @@
+Notes:
+- Trick is to use a double linked list (dll) and a map for the cache
+- Dll will maintain the order from least recent to most recent. 
+- Map will map the key to the pointer of a Node representing the entry in the Dll
+- 2 dummy pointers for least_recent (start of dll) and most_recent (end of dll) to make operation easier
+
+
+Steps:
+- Define the Node class for the Dll
+- implement the constuctor of the LRUCache class
+    - self.cache as dict
+    - self.cap as the capacity
+    - self.least_recent as new dummy node
+    - self.most_recent as new dummy node
+    - connect least_recent and most_recent
+
+- implement the get method
+    - if key not in cache, return -1
+    - if key in cache, get the value from the node
+        - remove node from dll, aka prev points to next
+        - add node to end of dll
+    - return the value
+
+- implement the put method
+    - initialize node pointer set to null
+    - if key in the cache
+        - get the node from the cache, set node pointer to node
+        - update the value to new value
+        - cut the node from the dll
+    - else 
+        - create new Node with key and value
+        - set node pointer to new node
+        - add new entry to the cache
+    
+    - if the length of cache greater than capacity
+        - get the first node in the dll (aka the least recent)
+        - cut if from the dll
+        - use the val from the node and remove it from the cache
+
+class Node:
+    def __init__(self, key, val):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+class LRUCache:
+
+    def __init__(self, capacity: int):
+        self.cap = capacity
+        self.cache = {}
+        self.least_recent = Node(-1, -1)
+        self.most_recent = Node(-1, -1)
+
+        self.most_recent.prev = self.least_recent
+        self.least_recent.next = self.most_recent
+
+
+    def get(self, key: int) -> int:
+
+        if key not in self.cache:
+            return -1
+        
+        val = self.cache[key].val
+
+        node = self.cache[key]
+        #break from dll
+        prev = node.prev; nxt = node.next
+        prev.next = nxt
+        nxt.prev = prev
+
+        #add to end of dll
+        last = self.most_recent.prev
+        last.next = node
+        node.prev = last
+        node.next = self.most_recent
+        self.most_recent.prev = node
+
+        return val
+
+    def put(self, key: int, value: int) -> None:
+
+        node = None
+        if key in self.cache:
+            node = self.cache[key]
+            node.val = value
+            #break from dll
+            prev = node.prev; nxt = node.next
+            prev.next = nxt
+            nxt.prev = prev
+        else:
+            node = Node(key, value)
+            #add to cache
+            self.cache[key] = node
+
+        #add to end of dll
+        last = self.most_recent.prev
+        last.next = node
+        node.prev = last
+        node.next = self.most_recent
+        self.most_recent.prev = node
+
+        if len(self.cache) > self.cap:
+            last = self.least_recent.next
+            nxt = last.next
+            self.least_recent.next = nxt
+            nxt.prev = self.least_recent
+            del self.cache[last.key]
