@@ -1,0 +1,92 @@
+Notes:
+- recursive solution
+
+
+Steps:
+- keep a pointer to the front of the section
+- loop to check if there is enough nodes to reverse, aka not less than k
+    - if reach end of the list before k, return the front node of the section
+
+- keep a pointer to the end of the reverse section
+- reverse the current section
+- set the end of the reversed section to the result of the func starting at the new section
+- return the reversed list
+
+
+
+def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+
+    def reverseK(node):
+        #base case
+        if not node:
+            return None
+        #check if can be reversed
+        curr = node
+        for _ in range(0, k):
+            if not curr:
+                return node
+            curr = curr.next
+        
+        #reset curr
+        curr = node
+
+        #reverse the section
+        prev = None
+        end = None
+        for _ in range(0, k):
+            nxt = curr.next
+            #set end pointer
+            if not prev:
+                end = curr
+            curr.next = prev
+            prev = curr
+            curr = nxt
+
+        end.next = reverseK(curr)
+
+        return prev
+    return reverseK(head)
+
+
+#complex faster solution
+
+        if not head.next:
+            return head
+
+        fast = [head]
+        for i in range(0, k):
+            fast[0] = fast[0].next
+
+        not_enough = [False]
+
+        def reverseK(node):
+
+            if not_enough[0]:
+                return node
+            if not node:
+                return None
+            count = 0
+            rev = None
+            nxt = node.next
+            back = None
+            #build reverse section
+            while count < k:
+                #last node
+                if not rev:
+                    back = node
+                node.next = rev
+                rev = node
+                node = nxt
+                if not node:
+                    break
+                nxt = node.next
+                if fast[0]:
+                    fast[0] = fast[0].next
+                else:
+                    not_enough[0] = True
+                count += 1
+            
+            back.next = reverseK(node)
+            return rev
+
+        return reverseK(head)
