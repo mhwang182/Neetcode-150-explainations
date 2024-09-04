@@ -1,0 +1,64 @@
+Notes:
+- Trick is to merge the lists in groups of two. This cuts the complexity to nlog k time.
+
+Steps:
+- implement method to merge two lists
+
+- while lists has more than 1 item
+    - initialize temp list 
+    - for loop through lists in increments of 2
+        - if i and i + 1 are within lists indexes
+            - merge list at i with list at i + 1
+            - add merges list to temp list
+        - else if there is only 1 list to choose
+            - add single list to the temp list
+    - set lists to the temp list
+
+- return lists[0], aka the fully merged list
+
+
+def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        
+    if len(lists) == 0:
+        return None
+    
+    if len(lists) == 1:
+        return lists[0]
+
+    def mergeLists(l1, l2):
+        dummy = ListNode(0, None)
+        res = dummy
+        while l1 or l2:
+            if l1 and l2:
+                if l1.val < l2.val:
+                    dummy.next = l1
+                    l1 = l1.next
+                else:
+                    dummy.next = l2
+                    l2 = l2.next
+            else:
+                if l1:
+                    dummy.next = l1
+                    l1 = l1.next
+                else:
+                    dummy.next = l2
+                    l2 = l2.next
+            dummy = dummy.next
+            dummy.next = None
+        return res.next
+
+
+    while len(lists) > 1:
+        temp = []
+
+        for i in range(0, len(lists), 2):
+            if i < len(lists) - 1:
+                l1 = lists[i]
+                l2 = lists[i + 1]
+                temp.append(mergeLists(l1, l2))
+            else:
+                temp.append(lists[i])
+
+        lists = temp
+
+    return lists[0]
