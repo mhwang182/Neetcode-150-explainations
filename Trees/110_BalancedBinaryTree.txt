@@ -1,0 +1,38 @@
+Notes:
+- 2 part recursion
+- Think about the order of the recursion. What should we do first before checking the current state
+
+Steps:
+- implement maxDepth recusive function
+- implement isBalanced function
+    - if the node is null, return True. //since technically balanced
+    - check if the check if the left child and right child are balanced.
+        - if any side is unbalanced return False. //No need to check any further
+    - find the maxDepth of left and right children
+    - if the absolute value of the difference is greater than 1, return False. aka not balanced
+    - return True
+
+class Solution:
+
+    def maxDepth(self, node):
+        if not node:
+            return 0
+
+        return 1 + max(self.maxDepth(node.left), self.maxDepth(node.right))
+
+    def isBalanced(self, root: Optional[TreeNode]) -> bool:
+
+        if not root:
+            return True
+
+        if not self.isBalanced(root.left) or not self.isBalanced(root.right):
+            return False
+
+        left_depth = self.maxDepth(root.left)
+        right_depth = self.maxDepth(root.right)
+
+        if abs(left_depth - right_depth) > 1:
+            return False
+        
+        return True
+            
