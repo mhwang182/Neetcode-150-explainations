@@ -1,0 +1,43 @@
+Notes:
+- Approach is to make recursive function that does 2 things
+- calculate the max depth of the left and right nodes
+- Then calculate what is the diameter through the current node. update the global diameter if greater
+- then return 1 + max depth out of the left and right nodes
+
+Steps:
+- implement maxDepth function
+- implement main recursive function
+    - get maxdepth of left and right nodes
+    - add the maxdepths to get the current diameter through the current node
+        - update global diameter
+    return 1 + max out of left maxdepth and right maxdepth
+
+
+def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
+
+    def maxDepth(root):
+        if not root:
+            return 0
+        
+        return 1 + max(maxDepth(root.left), maxDepth(root.right))
+
+    diameter = [0]
+
+    def dfs(root):
+
+        if not root:
+            return 0
+
+        max_left = dfs(root.left)
+        max_right = dfs(root.right)
+        
+        curr_diameter = max_left + max_right
+
+        diameter[0] = max(curr_diameter, diameter[0])
+
+        return 1 + max(max_left, max_right)
+
+    dfs(root)
+
+    return diameter[0]
+
