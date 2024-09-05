@@ -1,0 +1,16 @@
+Notes:
+- pretty intuitive. recursive solution
+
+Steps:
+- recursive function
+    - if the node is null, return 0
+
+    - return 1 + the max of the depths from the left node or right node
+
+
+def maxDepth(self, root: Optional[TreeNode]) -> int:
+
+    if not root:
+        return 0
+    
+    return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
