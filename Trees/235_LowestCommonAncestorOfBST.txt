@@ -1,0 +1,22 @@
+Notes:
+- Trick is to understand how BST works. At each node, every node in the right will be greater, every node in the left will be less
+- At each node, if both p and q are greater than curr, then we know its in the right and vice versa
+- If p and q are not definnitely in only one side, then we know the curr is the lca. Because theyre split now, so has to be the current.
+
+Steps:
+- if p and q are both greater than current node
+    - search and return from the right
+- if p and q are both less than current node
+    - search and return from the left
+
+- return current node. aka no other options
+
+def lowestCommonAncestor(self, root: 'TreeNode', p: 'TreeNode', q: 'TreeNode') -> 'TreeNode':
+
+    if p.val > root.val and q.val > root.val:
+        return self.lowestCommonAncestor(root.right, p, q)
+    
+    if p.val < root.val and q.val < root.val:
+        return self.lowestCommonAncestor(root.left, p, q)
+    
+    return root
