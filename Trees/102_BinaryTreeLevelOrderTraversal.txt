@@ -1,0 +1,38 @@
+Notes:
+- standard breadth first search implementation
+- remember to handle case where root is null
+
+steps:
+- initialize list called queue
+- while queue not empty
+    - initialize temp list
+    - initailize level list to store numbers in the current level
+    - for each node in queue
+        - add val to level list
+        - if node has left, add left to temp
+        - if not has right, add right to temp
+    - add level to result list
+    - set queue to temp. aka updating to the next level
+- return result list
+
+def levelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
+
+    if not root:
+        return []
+
+    queue = []
+    queue.append(root)
+    res = []
+    while queue:
+        temp = []
+        level = []
+        for node in queue:
+            level.append(node.val)
+            if node.left:
+                temp.append(node.left)
+            if node.right:
+                temp.append(node.right)
+        queue = temp
+        res.append(level)
+    
+    return res
