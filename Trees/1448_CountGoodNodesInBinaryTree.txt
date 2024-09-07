@@ -1,0 +1,29 @@
+Notes:
+- Keep in mind that number can be NEGATIVE
+- use the lower number -math.inf in python
+
+Steps:
+- implement recursive function. takes in node and current max
+    - if node is null, return 0
+    - create var isGood = 0
+    - if node.val is >= current max, then set isGood to 1. aka we found a good node
+    - get the max of current max and node.val. this will update the new max for the following nodes
+    - return isGood + countGood(node.left, new_max) + countGood(node.right, new_max)
+
+- call countGood(root, -math.inf)
+
+
+def goodNodes(self, root: TreeNode) -> int:
+
+    def countGood(node, curr_max):
+        if not node:
+            return 0
+        
+        isGood = 0
+        if node.val >= curr_max:
+            isGood = 1
+        
+        new_max = max(curr_max, node.val)
+        return isGood + countGood(node.left, new_max) + countGood(node.right, new_max)
+    
+    return countGood(root, -math.inf)
