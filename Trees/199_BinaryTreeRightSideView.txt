@@ -1,0 +1,36 @@
+Notes:
+- modified breadth first search. at every new level get the last node's val
+
+Steps:
+- if root null, return []
+
+- initailize list level. will store nodes in current level
+- while level not empty
+    - initialize temp list
+    - get the last node in level. save its val to result
+    - for each node in level:
+        - if node has left, append left to temp
+        - if node has right, append right to temp
+    - set level to temp
+- return result List
+
+def rightSideView(self, root: Optional[TreeNode]) -> List[int]:
+        
+    if not root:
+        return []
+
+    level = [root]
+
+    res = []
+
+    while level:
+        temp = []
+        res.append(level[-1].val)
+        for node in level:
+            if node.left:
+                temp.append(node.left)
+            if node.right:
+                temp.append(node.right)
+        level = temp
+    
+    return res
