@@ -1,0 +1,35 @@
+Notes:
+- Keep in mind a valid BST is strictly increasing if traversed in inorder traversal
+- Strictly increasing does not accept equal numbers in the sequence
+
+Steps:
+- initilize empty list
+- implement recursive inorder dfs function
+    - if node null, return 
+    - dfs(node.left)
+    - add node value to list
+    - dfs(node.right)
+    - return
+
+- loop through the list. if any element is <= the previous element then not strictly increasing. therefore invalid BST
+
+def isValidBST(self, root: Optional[TreeNode]) -> bool:
+    arr = []
+
+    def dfs(node):
+        if not node:
+            return
+        
+        dfs(node.left)
+        arr.append(node.val)
+        dfs(node.right)
+
+        return
+
+    dfs(root)
+
+    for i in range(1, len(arr)):
+        if arr[i] <= arr[i - 1]:
+            return False
+    
+    return True
