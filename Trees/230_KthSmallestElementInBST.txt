@@ -1,0 +1,36 @@
+Notes:
+- Start with inorder traversal
+- Since inorder is sorted, we just need to stop the traversal at the kth element
+
+Steps:
+- keep track of the count and result as outside variables
+- implement recursive inorder dfs
+    - if node null, return
+    - dfs(node.left)
+    - if count == k, aka we found the kth smallest
+        - set result to node.val
+        - return, aka end the recursion
+    - dfs(node.right)
+
+
+def kthSmallest(self, root: Optional[TreeNode], k: int) -> int:
+
+    count = [0]
+    res = [0]
+
+    def dfs(node):
+
+        if not node:
+            return
+
+        dfs(node.left)
+
+        count[0] += 1
+        if count[0] == k:
+            res[0] = node.val
+            return
+        
+        dfs(node.right)
+    
+    dfs(root)
+    return res[0]
