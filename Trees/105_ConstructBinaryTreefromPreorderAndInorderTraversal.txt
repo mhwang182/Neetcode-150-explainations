@@ -1,0 +1,29 @@
+Notes:
+- Keep in mind the first in the preorder list will always be a root. The question then becomes is it a root
+  in the left side or the right side?
+- We can determine that by splitting the inorder list by the root from the preorder list in question
+    - the left portion will be the left tree, the right portion will make up the right tree
+
+
+Steps:
+- implement recursive function
+    - if inorder list empty, return None
+    - pop from start of preorder list, this will be root val
+    - get index of the root_val in the inorder list
+    - create new root node with root val
+    - build the left tree from preorder list and left half of inorder list split by root val
+    - build right tree from preorder list and right half of the inorder list split by root val
+    - return Root node
+
+
+def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        
+    if not inorder:
+        return None
+
+    root_val = preorder.pop(0)
+    ind = inorder.index(root_val)
+    node = TreeNode(root_val)
+    node.left = self.buildTree(preorder, inorder[0: ind])
+    node.right = self.buildTree(preorder, inorder[ind+1:])
+    return node
