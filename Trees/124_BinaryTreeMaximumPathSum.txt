@@ -1,0 +1,57 @@
+Notes:
+- Think about at each node what paths produce a gain in the path sum. Options:
+    - path including the path starting with the left node
+    - path including the path starting with the right node
+    - path without including the left or right paths
+- if the max path from the left or right is negative, then ignore it because it does not produce a gain in path sum
+
+
+Steps:
+- implement dfs recursive function. return value is the max path sum from the current node
+    - if node is null, return 0
+
+    - get the max path sum starting at node.left
+    - get the max path sum starting at node.right
+
+    - if the left max path is less than 0, set it to 0. aka lets not even consider it
+    - if the right max path is less than 0, set it to 0
+
+    - get the path sum thru the current node.
+        - left max path + node.val + right max path
+    
+    - update global max path if thru is greater
+
+    - return node.val + max(max left path, max right path)
+
+
+
+def maxPathSum(self, root: Optional[TreeNode]) -> int:
+        
+    max_sum = [-math.inf]
+
+    def dfs(node):
+        if not node:
+            return 0
+
+        max_left = dfs(node.left)
+        max_right = dfs(node.right)
+
+        if max_left < 0:
+            max_left = 0
+        
+        if max_right < 0:
+            max_right = 0
+
+        thru = max_left + node.val + max_right
+
+        max_sum[0] = max(
+            thru,
+            max_sum[0]
+        )
+
+        return node.val + max(max_left, max_right)
+
+    dfs(root)
+
+    return max_sum[0]
+
