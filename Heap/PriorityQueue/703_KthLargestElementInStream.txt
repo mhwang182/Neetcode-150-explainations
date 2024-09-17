@@ -1,0 +1,40 @@
+Notes:
+- Keep in mind that length of n could be 1 less than k, otherwise len n usually greater than or equal to k
+- trick is to use heap, always keep the length of the heap to k
+
+Stesps:
+- import heapq
+- constructor
+    - initialize self.k = k
+    - initialize self.heap = nums
+    - heapify the heap
+    - shorten the heap to be length k
+
+- add method
+    - heappush new val 
+    - if the length of the heap is greater than k
+        - heappop the current smallest
+    
+    - return the current smallest
+
+
+
+import heapq
+
+class KthLargest:
+
+    def __init__(self, k: int, nums: List[int]):
+        self.k = k
+        self.heap = nums
+        heapq.heapify(self.heap)
+
+        while len(self.heap) > k:
+            heapq.heappop(self.heap)
+        
+    def add(self, val: int) -> int:
+        heapq.heappush(self.heap, val)
+
+        if len(self.heap) > self.k:
+            #pop smallest to maintain size
+            heapq.heappop(self.heap)
+        return self.heap[0] #accesses the smallest
