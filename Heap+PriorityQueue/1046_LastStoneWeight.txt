@@ -1,0 +1,33 @@
+Notes:
+- keep in mind to make a max heap, turn all values to negative
+
+Steps:
+- import heapq
+- loop through and negate every value in stones
+- heapify stones
+- while stones length > 1
+    - pop 2 largest stones from the heap
+    - if their values are not equal
+        - get their difference and add that to the heap
+
+- if no stones left, return 0
+- return stones[0] * -1
+
+
+def lastStoneWeight(self, stones: List[int]) -> int:
+    for i in range(0, len(stones)):
+        stones[i] = stones[i] * -1
+
+    heapq.heapify(stones)
+
+    while len(stones) > 1:
+        val1 = heapq.heappop(stones)
+        val2 = heapq.heappop(stones)
+
+        if val1 != val2:
+            res = min(val1, val2) - max(val1, val2)
+            heapq.heappush(stones, res)
+    
+    if len(stones) == 0:
+        return 0
+    return stones[0] * -1
