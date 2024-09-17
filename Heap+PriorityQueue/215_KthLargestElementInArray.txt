@@ -1,0 +1,27 @@
+Notes:
+- Use a min heap since we want to keep the largest and pop the smallest.
+
+Steps:
+- import heapq
+- initialize heap as list. Heapify the list
+- loop through the nums list
+    - heappush each number to the heap
+    - if the length of heap is greater than keep
+        - pop the smallest from the heap
+
+- return smallest in heap
+
+
+def findKthLargest(self, nums: List[int], k: int) -> int:
+        
+    heap = []
+    heapq.heapify(heap)
+
+    for i in range(0, len(nums)):
+        heapq.heappush(heap, nums[i])
+
+        if len(heap) > k:
+            #pop the smallest
+            heapq.heappop(heap)
+    
+    return heap[0]
