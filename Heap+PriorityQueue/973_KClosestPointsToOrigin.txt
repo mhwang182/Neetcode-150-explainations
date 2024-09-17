@@ -1,0 +1,16 @@
+Notes:
+- Approach is to use a tuple to store the point's distance and index
+- Maintain heap size to k. popping the largest distance each time it gets too big
+- Since we want to keep the smallest distances in the heap, we need to make it a max heap by negating the distances.
+  This is so the farthest distances are popped out.
+
+Steps:
+- import heapq
+- initialize heap as a list. Then heapify it
+- loop through the items in points
+    - calculate the negative distance
+    - push (distance, index) tuple to heap
+    - pop from heap if length larger than keep
+
+- loop through the heap. get each point from index and append to result
+- return result
