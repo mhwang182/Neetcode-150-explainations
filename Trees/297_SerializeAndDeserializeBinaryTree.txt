@@ -1,0 +1,59 @@
+Notes:
+- Essentially just do how leetcode serializes a tree. Do a preorder traversal and use '#' for null nodes
+- Keep in mind the order of execution in recursion.
+
+
+Steps:
+- serialize recursion
+    - if node is null, append '#', then return
+    - append node.val to the list
+    - call recursion on node.left
+    - call recursion on node.right
+
+    - return list as string
+
+- deserialize recursion
+    - pre recursion
+        - convert string into arr using split(). use iter() to turn list into iterable
+    - recursion
+        - get next val in the list
+        - if val is '#'
+            - return Null 
+        - create new node with val
+        - set node.left to recursion result
+        - set node.right to recursion result
+        return node
+    
+    
+class Codec:
+
+    def serialize(self, root):
+        arr = []
+        def dfs(node):
+            if not node:
+                arr.append("#")
+                return
+            arr.append(str(node.val))
+            dfs(node.left)
+            dfs(node.right)
+        
+        dfs(root)
+
+        return ','.join(arr)
+
+    def deserialize(self, data):
+        arr = data.split(',')
+
+        def dfs():
+            
+            val = next(arr)
+  
+            if val == '#':
+                return None
+            
+            node = TreeNode(int(val))
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        arr = iter(arr)
+        return dfs()
