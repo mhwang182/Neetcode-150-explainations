@@ -1,6 +1,6 @@
 Notes:
-- Essentially just do how leetcode serializes a tree. Do a preorder traversal and use '#' for null nodes
-- Keep in mind the order of execution in recursion.
+- Do a preorder traversal and use '#' for null nodes
+- Keep in mind that this is not the same as how leetcode does it.
 
 
 Steps:
@@ -24,7 +24,7 @@ Steps:
         - set node.right to recursion result
         return node
     
-    
+
 class Codec:
 
     def serialize(self, root):
