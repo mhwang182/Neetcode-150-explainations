@@ -1,0 +1,61 @@
+Notes:
+- Use 2 heaps. One max heap for the lower half and one min heap for the higher half
+- Rebalance the heaps when one gets too larger
+
+Steps:
+- Init
+    - initialize max heap for lower half
+    - initialize min heap for higher half
+
+- implement addNum
+    - when adding make sure to maintain sorted order
+    - if the higher heap isnt empty and num is greater than its min, add to higher heap
+    - else add to the lower heap (make sure to negate because its a max heap)
+
+    - rebalance the heaps if one is too larget
+    - while the lower heap size is greater than the higher heap by 1
+        - pop greatest from the lower heap and push to higher heap
+    
+    - while the higher heap size is greater than the lower heap by 1
+        - pop the smallest from the higher heap and push to the lower heap
+
+- implement findMedian
+    - if the higher heap size is greater than the lower heap size 
+        - return smallest from higher heap
+    
+    - if the lower heap size is greater
+        - return greatest from the lower heap
+    
+    - return avg of the lowest from higher heap and greatest from lower heap
+
+
+
+import heapq
+class MedianFinder:
+
+    def __init__(self):
+        self.max_heap_lower = [] #negative value
+        self.min_heap_higher = []
+
+    def addNum(self, num: int) -> None:
+        if self.min_heap_higher and num > self.min_heap_higher[0]:
+            heapq.heappush(self.min_heap_higher, num)
+        else:
+            heapq.heappush(self.max_heap_lower, -1*num)
+
+        while len(self.max_heap_lower) - len(self.min_heap_higher) > 1:
+            val = heapq.heappop(self.max_heap_lower) * -1
+            heapq.heappush(self.min_heap_higher, val)
+
+        while len(self.min_heap_higher) - len(self.max_heap_lower) > 1:
+            val = heapq.heappop(self.min_heap_higher)
+            heapq.heappush(self.max_heap_lower, -1 * val)
+
+    def findMedian(self) -> float:
+        if len(self.max_heap_lower) > len(self.min_heap_higher):
+            return self.max_heap_lower[0] * -1
+        
+        if len(self.max_heap_lower) < len(self.min_heap_higher):
+            return self.min_heap_higher[0]
+        
+        return ((self.max_heap_lower[0] * -1) + self.min_heap_higher[0])/2
