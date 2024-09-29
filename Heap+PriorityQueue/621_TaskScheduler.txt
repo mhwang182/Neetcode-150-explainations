@@ -1,0 +1,62 @@
+Notes:
+- Strategy is to start each sequence with the most frequent task and add the next frequent etc
+- you do not want to exceed n + 1 in a subsequence because you dont want to have to use idles in future
+- if the total number of tasks is less than n + 1, not enough space between, we need to add idles
+
+Steps:
+- import heapq
+- create counter for all the list of tasks
+- intialize a max heap list and add the counts of each task into the heap (-1*count, task_letter)
+- while True
+    - initialize empty new_heap
+    - task_count = 0
+    - while heap is not empty
+        - if task_count < n + 1
+            - pop from heap (current most frequent)
+            - increment task_count
+            - decrease count of the task (aka +1)
+            - if count < 0 (still has more), add to new heap
+        - else
+            - add with same count to new heap. aka dont count it in the subsequence
+    
+    - if the new heap empty aka last subsequence
+        - total count += task_count
+    - else
+        - total count += (n + 1) aka add the stndard subsequence length
+    
+    if not heap:
+        - break out of loop 
+
+
+def leastInterval(self, tasks: List[str], n: int) -> int:
+
+    counter = collections.Counter(tasks)
+    heap = []
+
+    for task, count in counter.items():
+        heapq.heappush(heap, (-1 * count, task))
+    
+    total_count = 0
+    while True:
+        task_count = 0
+        new_heap = []
+        while heap:
+            if task_count < n + 1:
+                task_count += 1
+                curr = heapq.heappop(heap)
+                if curr[0] + 1 < 0:
+                    heapq.heappush(new_heap, (curr[0] + 1, curr[1]))
+            else:
+                curr = heapq.heappop(heap)
+                heapq.heappush(new_heap, curr)
+
+        if not new_heap:
+            total_count += task_count
+        else:
+            total_count += (n + 1)
+        heap = new_heap
+
+        if not heap:
+            break
+        
+    return total_count
