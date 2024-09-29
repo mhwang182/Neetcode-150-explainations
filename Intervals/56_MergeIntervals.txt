@@ -1,0 +1,36 @@
+Notes:
+- list is not sorted. first step is to sort intervals list
+
+Steps:
+- sort intervals list
+- initialize res list with first interval as only element
+- for index 1 to end of the intervals list
+    - if back of results lists intersects with current interval
+        - merge and replace back of results list with merged interval
+    - else, append the current interval to back of results list
+
+- return results list
+
+
+class Solution:
+    def merge_intervals(self, interval1, interval2):
+        return [min(interval1[0], interval2[0]), max(interval1[1], interval2[1])]
+
+    def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+
+        intervals.sort(key=lambda interval: interval[0])
+
+        res = [intervals[0]]
+
+        for i in range(1, len(intervals)):
+            #if end intersects with curr merge and replace end
+            end = res[-1]
+            curr = intervals[i]
+
+            if end[1] >= curr[0]:
+                merged = self.merge_intervals(end, curr)
+                res[-1] = merged
+            else:
+                res.append(curr)
+
+        return res
