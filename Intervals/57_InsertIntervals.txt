@@ -1,0 +1,65 @@
+Notes:
+    - to merge 2 intervals, take the min of the starts and max of the ends
+    - take into account 3 cases:
+        - the new interval is ahead of the current interval
+        - the new interval is behind the current interval
+        - the new interval intersects with the current interval
+
+Steps:
+- handle edge cases
+    - if intervals list empty, return list with newInterval
+    - if new interval comes after last in intervals, append new interval and return
+- implement merge function
+- initialize result list
+- for loop through intervals list
+    - if newInterval ahead of curr interval
+        - append newInterval to the res
+        - return res list + remaining intervals
+    - if newInterval behind curr interval
+        - append curr interval to res list
+        - continue
+    - if newInterval intersects with curr interval
+        - merge intervals
+        - set newInterval to the merged interval
+
+- append newInterval to the result list. *to account for if merged interval is the last. 
+
+- return result list
+
+
+
+def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
+        
+    if not intervals:
+        return [newInterval]
+
+    res = []
+
+    def merge(interval1, interval2):
+        return [min(interval1[0], interval2[0]),  max(interval1[1], interval2[1])]
+
+    if newInterval[0] > intervals[-1][1]:
+        intervals.append(newInterval)
+        return intervals
+    
+    for i in range(0, len(intervals)):
+        interval = intervals[i]
+
+        #new interval is before current
+        if newInterval[1] < interval[0]:
+            res.append(newInterval)
+            return res + intervals[i:]
+        
+        #new interval is after current
+        if newInterval[0] > interval[1]:
+            res.append(interval)
+            continue
+
+        #new interval merges with current
+        if newInterval[0] <= interval[1] or newInterval[1] <= interval[0]:
+            newInterval = merge(newInterval, interval)
+            continue
+    
+    res.append(newInterval)
+    
+    return res
