@@ -1,0 +1,75 @@
+Notes:
+- Each trie node will only store children and if its the end. Not value
+- children will be a hashmap with letters as keys
+    - the key will be the current letter, the value will be a TrieNode storing the options for next letters
+
+
+Steps:
+- Implement TrieNode class
+    - has children map
+    - has ifEnd boolean
+
+- implement constructor
+    - self.root = new trie node
+
+- implement insert
+    - set curr pointer for the root trie node
+    - for each character in word
+        - if character not in curr children, add new key for character and set to new TrieNode
+        - set curr to the trie node of character
+    - set curr as an end
+
+- implement search
+    - set curr pointer to the root trie node
+    - for each character in word
+        - if character not in curr children, return False
+        - set curr to TrieNode for character in children
+    - return if the curr pointer is an end
+
+- implement startsWith
+    - same as search
+    - instead return True at the end
+
+
+
+class TrieNode:
+
+    def __init__(self):
+        self.children = {}
+        self.isEnd = False
+        
+
+class Trie:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+        curr.isEnd = True
+
+    def search(self, word: str) -> bool:
+        curr = self.root
+
+        for c in word:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+        
+        return curr.isEnd
+        
+
+    def startsWith(self, prefix: str) -> bool:
+        curr = self.root
+
+        for c in prefix:
+            if c not in curr.children:
+                return False
+            curr = curr.children[c]
+        
+        return True
