@@ -1,0 +1,76 @@
+Notes:
+    - similar to implementing Trie but needs recursion in search
+    - keep in mind that the key in the children map represents the current letter
+    - when the word has '.' in it, do a normal Trie search
+        - when the char is '.', do a search for every TrieNode at that point with the word as substring after '.'
+    - since the key represents the current letter, this means search every current letter
+
+Steps:
+- implement TrieNode class
+- constructor: same as Trie
+- addWord: same as Trie
+- implement search
+    - implement helper method that takes a TrieNode and word as args
+        - if word length is 0, aka we reached the end.   #this is basecase for recursion
+            - return if the TrieNode is an end
+        
+        - for loop through characters in word
+            - if character is '.'
+                loop through all of the children of the current TrieNode
+                    - call helper method with word as substring after '.' and TrieNode as the TrieNode value for current char
+                    - if helper returns true, return true
+
+                - if loop didnt return True, return False
+            - else if character not '.', do normal Trie search
+                - if current char not in curr.children, return False
+                - set curr to curr.children[character]
+        
+        - return if curr.isEnd
+
+    - return helper(root, word)
+
+    
+
+class TrieNode:
+
+    def __init__(self):
+        self.children = {}
+        self.isEnd = False
+
+class WordDictionary:
+
+    def __init__(self):
+        self.root = TrieNode()
+
+    def addWord(self, word: str) -> None:
+        curr = self.root
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+        curr.isEnd = True
+
+    def search(self, word: str) -> bool:
+        
+        def helper(curr, word):
+            if len(word) == 0:
+                return curr.isEnd
+
+            for i in range(len(word)):
+                c = word[i]
+                if c == '.':
+                    for letter, node in curr.children.items():
+                        found = helper(node, word[i + 1:])
+                        if found:
+                            return True
+                    return False
+                else:
+                    if c not in curr.children:
+                        return False
+                    curr = curr.children[c]
+            return curr.isEnd
+        
+        return helper(self.root, word)
+
+                
+
