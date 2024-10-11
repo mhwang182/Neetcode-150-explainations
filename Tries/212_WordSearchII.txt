@@ -1,0 +1,103 @@
+Notes:
+- Approach is to use a Trie to store all the words. Then dfs each letter in board and check if you can
+  make a path that makes a word in the Trie
+- Annoying things to consider:
+    - Need to mark each visited letter as # in dfs since letters cant be reused in a path
+    - after current letter is marked as #, reset it to original letter after recursions to reset to original state
+    - if a word is found, keep going dont return
+
+Steps:
+- implement TrieNode and Trie
+
+- implement findWords
+    - initialize a Trie
+    - for each word, add to the Trie
+    - for loop through rows and cols of board
+        - call dfs on i,j , root TrieNode, pass in board and path as ""
+    - return list of found words
+
+- implement dfs
+    - if trienode is end of word
+        - add path to result
+        - set trienode to not be end of word anymore
+    
+    - if i or j out of bounds, return
+
+    - if current letter is #, return
+
+    - if current letter in trienode children
+        - set current trienode to node.children[letter]
+    - else, return 
+
+    - set board[i][j] to #
+
+    - call dfs on all adjacent letter locations. update path
+
+    - reset board[i][j]
+
+
+
+class TrieNode:
+    def __init__(self):
+        self.children = collections.defaultdict(TrieNode)
+        self.isWordEnd = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+    
+    def insert(self, word):
+        curr = self.root
+        for c in word:
+            if c not in curr.children:
+                curr.children[c] = TrieNode()
+            curr = curr.children[c]
+        curr.isWordEnd = True
+
+
+class Solution:
+
+    def __init__(self):
+        self.res = []
+
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        
+        trie = Trie()
+
+        for word in words:
+            trie.insert(word)
+
+        for i in range(0, len(board)):
+            for j in range(0, len(board[0])):
+                self.dfs(i, j, trie.root, board, "")
+        
+        return self.res
+    
+    def dfs(self, i, j, node, board, path):
+
+        if node.isWordEnd:
+            self.res.append(path)
+            node.isWordEnd = False
+        
+        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]):
+            return 
+        
+        letter = board[i][j]
+
+        if letter == '#':
+            return
+        
+        if letter in node.children:
+            node = node.children[letter]
+        else:
+            return
+
+        board[i][j] = '#'
+
+        self.dfs(i + 1, j, node, board, path + letter)
+        self.dfs(i - 1, j, node, board, path + letter)
+        self.dfs(i, j - 1, node, board, path + letter)
+        self.dfs(i, j + 1, node, board, path + letter)
+        board[i][j] = letter
+
+
