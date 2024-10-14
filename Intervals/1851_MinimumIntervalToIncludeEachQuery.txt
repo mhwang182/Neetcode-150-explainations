@@ -1,0 +1,45 @@
+Notes:
+- Whenever asking to find minimum/smallest ALWAYS think about HEAPS
+- Key is to sort the inputs
+- try to solve initial question:
+    - if we have sorted intervals and sorted queries, how do we find the smallest interval for sorted_queries[0]?
+    - ans: add all valid queries to a heap as (size, interval end), and the smallest size will be heap[0]
+    - keep doing that for each query q, while making sure all the invalid intervals still in the heap are removed
+
+Steps:
+- create separate sorted list from queries
+- create separate sorted list for intervals in reverse
+- initialize list for heap
+- initialize map q_to_minsize to map q to its minimum size interval
+- loop through all q in sorted_queries
+    - while the sorted intervals list has intervals with start <= q
+        - pop from end of sorted intervals list
+        - if popped interval end >= q, add interval to heap as (size, end)
+    - while heap has items and heap[0] end is less than q, aka q is not inside
+        - pop heap[0] from the heap
+    - add q: heap[0][1] to the q_to_minsize map
+
+- return list with minsizes with order from unsorted queries list
+
+
+import heapq
+
+class Solution:
+    def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
+
+        sorted_queries = sorted(queries)
+        sorted_intervals = sorted(intervals, key=lambda i:i[0], reverse=True)
+
+        heap = []
+        q_to_minsize = {}
+
+        for q in sorted_queries:
+            while sorted_intervals and sorted_intervals[-1][0] <= q:
+                start, end = sorted_intervals.pop()
+                if q <= end:
+                    heapq.heappush(heap, (end - start + 1, end))
+            while heap and heap[0][1] < q:
+                heapq.heappop(heap)
+            q_to_minsize[q] = heap[0][0] if heap else -1
+            
+        return [q_to_minsize[q] for q in queries]
