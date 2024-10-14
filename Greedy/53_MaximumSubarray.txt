@@ -1,0 +1,20 @@
+Notes:
+- using kadane's algorithm
+
+Steps:
+- set 2 vars max_sum and curr_sub_sum to nums[0]
+- loop through rest of nums array
+    - update curr_sub_sum
+        - if nums[i] greater than curr_sub_sum + nums[i] then nums[i] becomes curr_sub_sum
+    - update max_sum if curr_sub_sum greater
+
+
+def maxSubArray(self, nums: List[int]) -> int:
+    
+    max_sum = curr_sub_sum = nums[0]
+    
+    for i in range(1, len(nums)):
+        curr_sub_sum = max(curr_sub_sum + nums[i], nums[i])
+        max_sum = max(max_sum, curr_sub_sum)
+    
+    return max_sum
