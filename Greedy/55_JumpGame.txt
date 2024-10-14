@@ -1,0 +1,22 @@
+Notes:
+- Trick is to start from the back and update the goal aka the end that we need to reach
+- if we can reach the goal from the current index, set that to be the new goal and continue
+
+Steps:
+- keep a variable goal_index
+- for loop through the nums array in reverse
+    - if we can reach the goal from current index
+        - set goal to current_index
+
+- if goal is 0 return True (aka we can make it to the end), else return False
+
+
+def canJump(self, nums: List[int]) -> bool:
+        
+    goal_index = len(nums) - 1
+
+    for i in range(len(nums) -1, -1, -1):
+        if i + nums[i] >= goal_index:
+            goal_index = i
+        
+    return goal_index == 0
