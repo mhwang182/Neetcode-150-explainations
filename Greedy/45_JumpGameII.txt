@@ -1,0 +1,31 @@
+Explaination:
+- initialize left and right pointers, both equal to 0 at first. This will represent the window of indexes we can jump to next.
+- while we havent reached the end yet
+    - find the farthest index we can reach from the indexes in the window based on the number of jumps at each index.
+    - update the left pointer to right + 1
+        - we only want to consider indexes outside of the window since we dont want to add extra jumps
+
+    - update right to be the farthest we can reach
+    - increment number of jumps
+- return number of jumps
+
+
+def jump(self, nums: List[int]) -> int:
+        
+    l = r = 0
+
+    jumps = 0
+
+    while True:
+        if r >= len(nums) - 1:
+            break
+
+        farthest = max([i + nums[i] for i in range(l, r+1)])
+
+        l = r + 1
+        
+        r = farthest
+
+        jumps += 1
+
+    return jumps
