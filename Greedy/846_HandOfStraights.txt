@@ -1,0 +1,75 @@
+Explanation:
+- First check if the hand array cant be split evenly by groupSize
+- Start by thinking about how to start each group, its easiest to start with the smallest and find the next consecutives.
+  So we need to sort the list or find a way to maintain the order. Since we'll need to add back numbers a heap is a better way
+- Loop through all numbers and add them to a heap
+- Keep a counter for the numbers in the hand so far and the last number we added
+- Keep a temp list to store all the numbers we need to ignore for now
+- while the heap has numbers
+    - pop the current smallest number aka curr
+    - if the hand is empty aka count 0
+        - update hand size
+        - set last added card to curr
+    - else if the hand isnt empty
+        - if the curr is the same as the last added, we want to ignore for now
+            - add the temp list
+            - continue and do nothing
+        - if the curr != the last num + 1, aka isnt the next consecutive number in the group
+            - return False
+        
+        - since those above cases are false, we know the curr is the next consecitve num
+            - update hand size (+= 1)
+            - set last added number to curr
+        
+    - if after the above steps the current group size == groupSize
+        - reset the hand
+            - hand size = 0
+            - last_card = -1
+        - add all the ignored nums in temp back into heap
+        - reset temp to []
+    
+- if the heap is empty and the temp list is empty, that means all the numbers were able to be grouped so return True
+- else return False
+
+
+
+def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
+
+    if len(hand) % groupSize != 0 or len(hand) < groupSize:
+        return False
+    
+    
+    heap = []
+
+    for num in hand:
+        heapq.heappush(heap, num)
+
+    hand_count = 0
+    last_card = -1
+
+    temp = []
+    while heap:
+        curr = heapq.heappop(heap)
+
+        if hand_count == 0:
+            last_card = curr
+        else: 
+            if curr == last_card:
+                temp.append(curr)
+                continue
+
+            if curr != last_card + 1:
+                return False
+        
+            last_card = curr
+        
+        hand_count += 1
+
+        if hand_count == groupSize:
+            hand_count = 0
+            last_card = -1
+            for num in temp:
+                heapq.heappush(heap, num)
+            temp = []
+    
+    return len(heap) == 0 and len(temp) == 0
