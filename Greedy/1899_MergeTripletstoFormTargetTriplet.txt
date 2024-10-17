@@ -1,0 +1,36 @@
+Logic Explaination:
+- Since we need to max every index in the triplet, the one we merge with cannot have a number greater than in target.
+  If we merge them, then every following merge will be invalid, so we want to filter out any triplet that has a number greater than in target.
+- Once we filter out all the greater triplets, then we can merge all the remaining because the max for each will be the target values
+
+Code Explaination:
+- implement a function to check if a triplet has a number that is greater than the same index in the target
+- initialize the res triplet as [0, 0, 0]
+- for every triplet in the triplet list
+    - if the triplet doesnt have anything greater than the target
+        - update res to the max of every number in the triplet
+        - if the res equals the target we can return True and not check any further to be more efficient
+
+
+- return False since res never equaled the target
+
+
+
+def mergeTriplets(self, triplets: List[List[int]], target: List[int]) -> bool:
+    
+    def hasGreater(triplet):
+        for i in range(0, 3):
+            if triplet[i] > target[i]:
+                return True
+
+        return False
+
+    res = [0, 0, 0]
+
+    for triplet in triplets:
+        if not hasGreater(triplet):
+            res = [max(triplet[0], res[0]), max(triplet[1], res[1]), max(triplet[2], res[2])]
+            if res[0] == target[0] and res[1] == target[1] and res[2] == target[2]:
+                return True
+    
+    return False
