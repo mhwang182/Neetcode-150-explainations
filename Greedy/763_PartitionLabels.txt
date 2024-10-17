@@ -1,0 +1,64 @@
+Logic Explanation:
+- convert each letter into an interval with index of first occurance and last occurance
+- assuming the intervals are in sorted order, if any of the intervals intersect we need to merge.
+  Once all the intersecting intervals are merged, then we'll have all the parts where each letter only exists in one part
+
+Code Explanation:
+- Initialize a dict to map each letter to the interval
+- for every letter in the string
+    - if first occurance
+        - add new letter to dict with interval [i, i]
+    - else
+        - update end index in the interval for letter
+
+- add all intervals in the dict to a list. (order will be preserved from the dict so no need to sort)
+
+- create curr to be first interval
+- create res to be the result size list
+
+- for every interval in list starting at the 1 index
+    - nxt = interval[i]
+
+    - if curr and nxt intersect
+        - set curr to the merge of the intervals
+    - else
+        - append the size of curr to the res
+        - set curr to nxt
+
+- res append size of curr (aka the last interval)
+
+- return res
+
+
+def partitionLabels(self, s: str) -> List[int]:
+
+    intervals = {}
+
+    for i in range(0, len(s)):
+        if s[i] not in intervals:
+            intervals[s[i]] = [i, i]
+        else:
+            intervals[s[i]][1] = i
+
+    list_intervals = []
+
+    for key, value in intervals.items():
+        list_intervals.append(value)
+    
+    curr = list_intervals[0]
+
+    res = []
+
+    for i in range(1, len(list_intervals)):
+        nxt = list_intervals[i]
+
+        if max(curr[0], nxt[0]) <= min(curr[1], nxt[1]):
+            curr = [min(curr[0], nxt[0]), max(curr[1], nxt[1])]
+        else:
+            res.append(curr[1] - curr[0] + 1)
+            curr = nxt
+    
+    res.append(curr[1] - curr[0] + 1)
+
+    return res
+
