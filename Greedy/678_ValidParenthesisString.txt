@@ -1,0 +1,39 @@
+Logic Explanation:
+- The solution is similar to kadane's algorithm
+- as we go through the string we want to keep track of the max open parenthesis and the min open parenthesis
+- the max represents the count when all the * are considered as open
+- the min represents the count when all the * are considered as closed
+- whenever the min dips below 0 we reset it to be 0 because we can go back and set a * to be empty or open to prevent it from going negative
+- if the max ever dips below 0 we know its not valid since there cant be more closed than open at any pointer
+- if either the min or max is 0 we know the string is valid
+
+
+
+def checkValidString(self, s: str) -> bool:
+
+    openMin = 0
+
+    openMax = 0
+
+    for char in s:
+        if char == '(':
+            openMin += 1
+            openMax += 1
+            continue
+        
+        if char == ')':
+            openMin -= 1
+            openMin = max(0, openMin)
+            openMax -= 1
+            if openMax < 0:
+                return False
+            continue
+        
+        if char == '*':
+            openMin -= 1
+            openMin = max(0, openMin)
+            openMax += 1
+            continue
+    
+    return openMin == 0 or openMax == 0
+
