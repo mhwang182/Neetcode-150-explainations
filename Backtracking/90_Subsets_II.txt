@@ -1,0 +1,32 @@
+Explanation:
+- Trick is to solve like the normal subsets problem except on the step to exclude the current num:
+    if the num is a duplicate, skip until we are at an index of a new num
+
+- We need to sort the list first in order to skip duplicates
+
+
+
+def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+
+    def backtrack(index, sub):
+
+        if index == len(nums):
+            res.append(sub[::]) //get copy of list
+            return
+
+        #Handle including current num
+        sub.append(nums[index])
+        backtrack(index + 1, sub)
+        sub.pop()
+
+        #Handle excluding current num and all duplicates
+        while index + 1 < len(nums) and nums[index] == nums[index + 1]:
+            index += 1
+        backtrack(index + 1, sub)
+
+
+    res = []
+    nums.sort()
+    backtrack(0, [])
+
+    return res
