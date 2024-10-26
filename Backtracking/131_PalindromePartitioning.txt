@@ -1,0 +1,37 @@
+Notes:
+- From now on, if it is a string problem consider using Prefix logic
+- Trick is to check all prefixes if they are palindromes
+- Its ok to do O(n) palindrome checking here
+
+Explanation:
+- backtracking algorithm
+    - if the substring is empty, add to result and return
+
+    - use a for loop to find all the prefixes of current string
+        - if the prefix is a palindrome
+            - add the prefix to the palindrome list
+            - backtrack using the suffix substring
+            - pop the prefix off the palindrome list
+    
+
+def partition(self, s: str) -> List[List[str]]:
+
+    def isPalin(sub):
+        #if equals its reverse
+        return sub == sub[::-1]
+
+    def backtrack(substr, palin_list):
+
+        if len(substr) == 0:
+            res.append(palin_list[::])
+            return
+        
+        for i in range(1, len(substr) + 1):
+            prefix = substr[:i]
+            if isPalin(prefix):
+                palin_list.append(prefix)
+                backtrack(substr[i:], palin_list)
+                palin_list.pop()
+    res = []
+    backtrack(s, [])
+    return res
