@@ -1,0 +1,53 @@
+Notes:
+- Trick is to mark every cell as '#' when visited and then set back to original value after backtracking
+- Do that instead of storing visited cells in a set or something
+- It is important to check if we reached the end of the string first before checking if the current cell 
+    is out of bounds or anything else 
+
+
+Explanation:
+- Loop through all cells in the board and if the cell equals the first letter, start backtracking
+- if backtracking returns True, return True
+
+- Backtracking algorithm
+    - if we reached the end of the word, return True
+    - if cell is out of bounds return false
+    - if the cell has already been visited, return False
+    - if the cell doesnt match the letter we're looking for, return False
+
+    - save board[r][c] value in temp
+    - set board[r][c] to '#' aka visited
+    - backtrack adjacent cells
+    - set board[r][c] back to temp
+
+def exist(self, board: List[List[str]], word: str) -> bool:
+
+    def backtrack(desired_index, r, c):
+        
+        if desired_index == len(word):
+            return True
+
+        if r < 0 or r >= len(board) or c < 0 or c >= len(board[0]):
+            return False
+
+        if desired_index > len(word) or board[r][c] != word[desired_index]:
+            return False
+
+        if board[r][c] == '#':
+            return False
+
+        temp = board[r][c]
+        board[r][c] = '#'
+        found = backtrack(desired_index + 1, r - 1, c) or backtrack(desired_index + 1, r + 1, c) or backtrack(desired_index + 1, r, c - 1) or backtrack(desired_index + 1, r, c + 1)
+        board[r][c] = temp
+
+        return found
+
+    for r in range(0, len(board)):
+        for c in range(0, len(board[0])):
+            if board[r][c] == word[0]:
+                if backtrack(0, r, c):
+                    return True
+
+    return False
+
