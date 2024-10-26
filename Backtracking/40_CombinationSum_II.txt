@@ -1,0 +1,33 @@
+Explanation:
+- Start out writing standard combination finding algorithm
+- The key is you want repeated numbers to repeat but only repeat once
+- To do this think of this example. we start with [1, 1, 2, 5, 6] and we want target 8
+    - we want to make [1, 1, 6] but not [1, 2, 5] twice
+    - we cant skip every repeating or else we will loose answers
+    - we can skip every repeating after the first
+    - so we start with [1] [2] [5] [6] as starting options
+
+
+
+def combinationSum2(self, candidates, target):
+
+        candidates.sort()
+
+        def backtrack(index, curr_sum, combo):
+            if index > len(candidates) or curr_sum > target:
+                return
+
+            if curr_sum == target:
+                res.append(combo[::])
+                return
+
+            for i in range(index, len(candidates)):
+                if i > index and candidates[i] == candidates[i - 1]:
+                    continue
+                combo.append(candidates[i])
+                backtrack(i + 1, curr_sum + candidates[i], combo)
+                combo.pop()
+
+        res = []
+        backtrack(0, 0, [])
+        return res
