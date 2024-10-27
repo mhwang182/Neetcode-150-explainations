@@ -1,0 +1,70 @@
+Notes:
+- To initialize the board without copying the same list do this:
+    board = [['.' for col in range(n)] for row in range(n)]
+
+- The trick is to see the pattern between (row + col) and (row - col)
+    - the cells on the same slope will all have either same (row + col) or (row - col)
+
+
+Explanation:
+- initialize a board of '.'
+
+- implement backtracking algorithm
+    - if current row is out of bounds
+        - append board to res 
+        - return
+    
+    - loop through every col
+        - if the col isnt available and the current (row, col) is in a taken diagonal
+            - skip
+        -else: 
+            - set current cell to 'Q'
+            - add current col to col set to mark as unavailable
+            - add row + col to plus diagonal set
+            - add row - col to minus diagonal set
+
+            - backtrack on row + 1
+
+            - reset the board and sets
+
+
+def solveNQueens(self, n: int) -> List[List[str]]:
+
+    board = [['.' for col in range(n)] for row in range(n)]
+
+    def copy_board():
+        temp = []
+        for r in range(0, n):
+            temp.append(''.join(board[r]))
+        
+        return temp
+
+    def backtrack(row):
+        if row >= n: 
+            res.append(copy_board())
+            return 
+
+        for col in range(0, n):
+            if col in col_set or (row + col in plus_set) or (row - col in minus_set):
+                continue
+            
+            board[row][col] = 'Q'
+            col_set.add(col)
+            plus_set.add(row + col)
+            minus_set.add(row - col)
+
+            backtrack(row + 1)
+
+            board[row][col] = '.'
+            col_set.remove(col)
+            plus_set.remove(row + col)
+            minus_set.remove(row - col)
+    
+    res = []
+    col_set = set()
+    plus_set = set()
+    minus_set = set()
+
+    backtrack(0)
+    return res
+            
