@@ -1,0 +1,94 @@
+Explanation:
+
+- init:
+    - time = 0, keeps track of time of tweets. decrement by -1 after every tweet made
+    - id_to_posts, maps userId to list of postIds
+    - id_to_followers, maps userId to Ids of users they follow
+
+- postTweet:
+    - add userId to id_to_followers[userId] if not already there. Aka follow self if not already
+    - add tweetId to the list in id_to_posts[userId]. Aka add tweet to list of posts for user
+    - decrement time
+
+- follow:
+    - add followeeId to id_to_followers[followerId]
+
+- unfollow:
+    - if followerId has followers and followeeId is in their list of followers
+        - remove followeeId from id_to_followers[followerId]
+
+
+- getNewsFeed:
+    - initialize res = []
+    - initialize a heap: heap = []
+
+    - for every followerId in id_to_followers[userId]
+        - get the index of the element of id_to_posts[followerId]
+        - add the last tweet from followerId to the heap
+            - add as [tweet_time, tweet_id, index, follower_id]
+    
+    - while heap and len(res) < 10:
+        - pop the most recent tweet from heap: heap.heappop()
+        - append the post_id to res
+
+        - add the next most recent tweet from the followerId of the tweet we just popped
+            - check if (index of the popped tweet) - 1 is >= 0
+                - add the tweet of (index - 1) to the heap
+                    - add as [tweet_time, tweet_id, index - 1, follwoer_id]
+    
+    - return res
+    
+
+import heapq
+
+class Twitter:
+
+    def __init__(self):
+        self.time = 0
+        self.id_to_posts = defaultdict(list)
+        self.id_to_followers = defaultdict(set)
+
+    def postTweet(self, userId: int, tweetId: int) -> None:
+        if userId not in self.id_to_followers[userId]:
+            #follow self
+            self.id_to_followers[userId].add(userId)
+
+        self.id_to_posts[userId].append((self.time, tweetId))
+        self.time -= 1
+        
+
+    def getNewsFeed(self, userId: int) -> List[int]:
+        
+        res = []
+        heap = []
+
+        for followerId in self.id_to_followers[userId]:
+            if followerId in self.id_to_posts:
+                #index of last post
+                index = len(self.id_to_posts[followerId]) - 1
+                post_time, tweetId = self.id_to_posts[followerId][index]
+                heapq.heappush(heap, [post_time, tweetId, followerId, index])
+        
+        while heap and len(res) < 10:
+            #get latest from heap
+            post_time, tweetId, curr_follwerId, index = heapq.heappop(heap)
+            res.append(tweetId)
+
+            #add next post candidate
+            if index - 1 >= 0:
+                post_time, tweetId = self.id_to_posts[curr_follwerId][index - 1]
+                heapq.heappush(heap, [post_time, tweetId, curr_follwerId, index -1])
+        
+        return res
+        
+
+    def follow(self, followerId: int, followeeId: int) -> None:
+        self.id_to_followers[followerId].add(followeeId)
+
+    def unfollow(self, followerId: int, followeeId: int) -> None:
+        if followerId in self.id_to_followers and followeeId in self.id_to_followers[followerId]:
+            self.id_to_followers[followerId].remove(followeeId)
+
+
+
+        
