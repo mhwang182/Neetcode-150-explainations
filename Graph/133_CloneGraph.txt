@@ -1,0 +1,78 @@
+Notes:
+- use hashmap to map index to copy node
+- use set to keep track of already visited indexes
+- use deque to manage the bfs
+- use bfs traversal
+
+Explanation: 
+- We start with node 1
+- add 1 to hashmap with new copy node
+- add 1 to visited Set
+- add original node1 to the deque 
+
+- while the deque is not empty
+    - pop first from deque as parent
+    - get copy of parent from hashmap
+    - get list of neighbors from parent
+    - for each neighbor
+        - if neightbor index not in hashmap
+            - create new copy node of neighbor
+        - else 
+            - get copy node of neighbor from hashmap
+        - add copy neighbor to copy parent neighbor list
+
+        - if neighbor index not visited
+            - add original neighbor to deque
+            - add neighbor index to visited Set
+
+- return hashmap[1] //aka root copy node
+
+
+
+class Solution {
+    public Node cloneGraph(Node node) {
+        
+        if(node == null) {
+            return null;
+        }
+        Map<Integer, Node> indexToNode = new HashMap<>();
+        Set<Integer> visitedSet = new HashSet<>();
+
+        indexToNode.put(node.val, new Node(node.val));  
+        visitedSet.add(node.val);
+
+        Deque<Node> deque = new ArrayDeque<>();
+        deque.add(node);
+
+        while( deque.size() > 0 ) {
+            int currentLength = deque.size();
+
+            for (int i = 0; i < currentLength; i++) {
+
+                Node parent = deque.removeFirst();
+                Node parentCopy = indexToNode.get(parent.val);
+
+                for(Node neighborNode: parent.neighbors) {
+                    
+                    Node copyNode = null;
+                    if(!indexToNode.containsKey(neighborNode.val)) {
+                        copyNode = new Node(neighborNode.val);
+                        indexToNode.put(neighborNode.val, copyNode);
+                    } else {
+                        copyNode = indexToNode.get(neighborNode.val);
+                    }
+
+                    parentCopy.neighbors.add(copyNode);
+                    
+                    if (!visitedSet.contains(neighborNode.val)) {
+                        visitedSet.add(neighborNode.val);
+                        deque.addLast(neighborNode);
+                    }
+                }
+            }
+        }
+        
+        return indexToNode.get(1);
+
+    }
+}
