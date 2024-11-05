@@ -1,0 +1,91 @@
+Notes:
+- Only increase minute count if new oranges were rotted
+    - aka if we start with only 1 rotten and no other oranges, it would take 0 minutes
+
+- You know how many new oranges become rotten, in bfs. If you count the initial fresh,
+    you can decrease by 1 every time a new orange becomes rotten. If we have any fresh left over, return -1
+
+- make a list like int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+- then do: 
+    for(int[] dir: dirs)
+        int newR = rot[0] + dir[0];
+        int newC = rot[1] + dir[1];
+
+    instead of manually doing adjacents
+
+
+-Explanation
+    - implement deque that will take [row, col]
+    - create freshCount = 0
+    - loop through grid
+        - add every rotten to deque
+        - if fresh, increment freshCount
+
+    - count for minutes: minutes = 0
+    
+    - while deque not empty
+        - get current size of deque
+        - for 0 to current size
+            - pop first from deque
+            - for every adjacent of popped
+                - if not already rotten, make rotten in grid
+                    - add [r, c] to deque
+                    - decrement freshCount
+
+        - if deque size > 0, increment minutes
+    
+    - return -1 if freshcount > 0, else return minutes
+
+
+class Solution {
+    public int orangesRotting(int[][] grid) {
+        
+        Deque<int[]> deque = new ArrayDeque<>();
+        int m = grid.length;
+        int n = grid[0].length;
+        int freshCount = 0;
+
+        for(int r = 0; r < grid.length; r++) {
+            for(int c = 0; c < grid[0].length; c++) {
+                if(grid[r][c] == 2) {
+                    deque.addLast(new int[]{r, c});
+                } else if (grid[r][c] == 1) {
+                    freshCount++;
+                }
+            }
+        }
+        int minutes = 0;
+
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        while(deque.size() > 0) {
+            int currentSize = deque.size();
+
+            for(int i = 0; i < currentSize; i++) {
+
+                int[] rot = deque.removeFirst();
+
+                for(int[] dir: dirs) {
+                    int newR = rot[0] + dir[0];
+                    int newC = rot[1] + dir[1];
+
+                    if(inGrid(newR, newC, m, n) && grid[newR][newC] == 1) {
+                        grid[newR][newC] = 2;
+                        freshCount--;
+                        deque.addLast(new int[]{newR, newC});
+                    }
+                }
+            }
+            if(deque.size() > 0) {
+                minutes++;
+            }
+        }
+
+        return freshCount > 0 ? -1 : minutes;
+    }
+
+    public static boolean inGrid(int r, int c, int m, int n) {
+        return r >= 0 && c >= 0 && r < m && c < n;
+    }
+
+}
