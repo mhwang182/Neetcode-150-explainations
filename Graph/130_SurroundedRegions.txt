@@ -1,0 +1,92 @@
+Notes:
+    - The only Os that can be converted are the ones not connected to an O on an edge
+    - Therefore, we only need to keep track of the Os connected to an edge and all the other Os can turn into X
+
+Explanation:
+    - implement dfs to mark all visited Os
+        - if r,c out of bounds, return
+        - if r,c is 'X' or '#', return
+
+        - set board[r][c] to '#'. aka mark the O as visited
+
+        - dfs for all adjacent cells
+
+    
+    - loop through the top and bottom edges
+        - if current cell is O
+            - dfs on r, c
+
+    - loop through the left and right edges
+        - if current cell is O
+            - dfs on r, c
+    
+    - loop through grid
+        - if board[r][c] == 'O'. aka unvisited
+            - convert to X
+    
+    - loop through grid
+        - if board[r][c] == '#'
+            - convert back to O 
+
+            
+
+class Solution {
+    public void solve(char[][] board) {
+
+        int m = board.length;
+        int n = board[0].length;
+
+        for(int r = 0; r < board.length; r++) {
+            if(board[r][0] == 'O'){
+                dfs(r, 0, board);
+            }
+            if(board[r][n - 1] == 'O'){
+                dfs(r, n - 1, board);
+            }
+        }
+
+        for(int c = 0; c < n; c++) {
+            if(board[0][c] == 'O'){
+                dfs(0, c, board);
+            }
+            if(board[m - 1][c] == 'O'){
+                dfs(m - 1, c, board);
+            }
+        }
+
+        for(int r = 0; r < m; r++) {
+            for(int c = 0; c < n; c++) {
+                if(board[r][c] == 'O') {
+                    board[r][c] = 'X';
+                }
+            }
+        }
+
+        for(int r = 0; r < m; r++) {
+            for(int c = 0; c < n; c++) {
+                if(board[r][c] == '#') {
+                    board[r][c] = 'O';
+                }
+            }
+        }
+    }
+
+    public static void dfs(int r, int c, char[][] board) {
+        if(r < 0 || r >= board.length || c < 0 || c >= board[0].length) {
+            return;
+        }
+
+        if(board[r][c] == 'X' || board[r][c] == '#') {
+            return;
+        }
+
+        board[r][c] = '#';
+
+        dfs(r + 1, c, board);
+        dfs(r - 1, c, board);
+        dfs(r, c + 1, board);
+        dfs(r, c - 1, board);
+
+        return;
+    }
+}
