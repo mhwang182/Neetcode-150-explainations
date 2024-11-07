@@ -1,0 +1,90 @@
+Notes:
+- Start from all cells on the edges and find all the cells each can reach
+- Result is the cells that both the pacific edges and atlantic edges could reach
+
+Explanation:
+- implement dfs traversal
+    - add current r,c to visitedSet
+    - for all adjacent cells
+        - if out of bounds, skip
+        - if already visited, skip
+        - if height not greater than current r,c aka cant flow, skip
+        - dfs on valid adjacents
+
+
+- loop through top and bottom rows
+    - dfs with visitedPacific set
+    - dfs with visitedAtlantic set
+
+- loop through left and right columns
+    - dfs with visitedPacific set
+    - dfs with visitedAtlantic set
+
+- loop through whole grid
+    - if r,c in both visitedPacific and visitedAtlantic sets
+        - add to result
+
+- return Result
+
+
+
+
+class Solution {
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+
+        int m = heights.length;
+        int n = heights[0].length;
+
+        Set<String> visitedPacific = new HashSet<String>();
+        Set<String> visitedAtlantic = new HashSet<String>();
+
+        for(int r = 0; r < m; r++) {
+            dfs(r, 0, heights, visitedPacific);
+            dfs(r, n - 1, heights, visitedAtlantic);
+        }
+
+        for(int c = 0; c < n; c++) {
+            dfs(0, c, heights, visitedPacific);
+            dfs(m - 1, c, heights, visitedAtlantic);
+        }
+
+        List<List<Integer>> res = new ArrayList<List<Integer>>();
+
+        for(int r = 0; r < m; r++) {
+            for(int c = 0; c < n; c++) {
+                if(visitedPacific.contains(r+","+c) && visitedAtlantic.contains(r+","+c)) {
+                    res.add(new ArrayList<Integer>(List.of(r, c)));
+                }
+            }
+        }
+
+        return res;
+    }
+
+    public static void dfs(int r, int c, int[][] heights, Set<String> visited) {
+        if(visited.contains(r+","+c)) {
+            return;
+        }
+
+        visited.add(r + "," + c);
+
+        int[][] dirs = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+        for(int[] dir: dirs) {
+
+            int newR = r + dir[0];
+            int newC = c + dir[1];
+
+            if(newR < 0 || newR >= heights.length || newC < 0 || newC >= heights[0].length) {
+                continue;
+            }
+
+            if(visited.contains(newR+","+newC) || heights[r][c] > heights[newR][newC]) {
+                continue;
+            }
+            
+            dfs(newR, newC, heights, visited);
+        }
+
+    }
+}
