@@ -1,0 +1,37 @@
+Notes:
+- Trick is to store the number of prereqs required for each course
+- This will remove the need of keeping track of visited because we can only visit a new course if enough prereqs found
+- The course we can start with are the ones without prereqs
+
+Explanation:
+- initialize hashmap (courseToNext) to map the course to the courses its a prereq for
+- initialize array for the number of prereqs for course i (numPrereqs)
+
+- for each prereq in prerequisites
+    - if prereq course (prereq[1]) not in map, add to map with new list
+    - add prereq[0] to the list of prereq[1]
+    - increment numPrereqs for course prereq[0] 
+
+- initialize deque
+
+- for i = 0 to numCourses - 1
+    - if numPrereqs[i] == 0 aka course i has no prereqs
+       - add i to deque
+
+- do a bfs traversal on deque
+
+    - create count = 0
+
+    - while deque is not empty
+        - get size of deque
+        - for size of deque
+            - course = pop first from deque
+            - increment count //because we can reach this course
+
+            - get list of courses that can come after course
+            - for next in next courses list
+                - decrement numPrereqs[next] //we visited one of the prereqs
+                - if numPrereqs[next] //we visisted all the prereqs of next
+                    - add next to back of deque
+
+- return count == numCourses
