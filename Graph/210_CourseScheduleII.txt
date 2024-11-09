@@ -1,0 +1,88 @@
+Notes:
+- Premise is to visit all prerequistes before visiting the courses that require prereqs
+- If we want to visit a course, we have to make sure that all the prereqs are visited first
+- We need to visit all courses that dont have prereqs first
+
+Explanation:
+- create hashmap to map course to the courses you can take after (courseToNext)
+- create array to store the number of prereqs needed to take course i (numPrereqs)
+
+- loop through prerequisites list
+    - add prereq[1] to prereq[0]'s list
+    - increment numPreqreqs[prereq1] by 1
+
+- do bfs traversal
+    - initialize deque
+    - loop through 0 to numcourse - 1
+        - if course doesnt have prereqs, add to deque
+
+    - create path array of size numCourses
+    - create index to represent current index in path array
+
+    - while deque isnt empty
+        - get current size of deque
+        - for 0 to current size
+            - currCourse = pop first from deque
+            - set path[index] to currCourse, index++
+            - get list of next courses
+            - for next in next list
+                - numPrereqs[next]-- //aka decrease number of prereqs needed
+                - if numPrereqs[next] == 0 //visisted all prereqs   
+                    - add next to back of deque
+    
+    - return path array if index == numCourses  //aka return the path if we visisted all courses
+    - else return []
+
+
+
+class Solution {
+
+    public int[] findOrder(int numCourses, int[][] prerequisites) {
+        
+        Map<Integer, List<Integer>> courseToNext = new HashMap<>();
+
+        int[] numPrereqs = new int[numCourses];
+
+        for(int[] prereq: prerequisites) {
+            if(!courseToNext.containsKey(prereq[1])) {
+                courseToNext.put(prereq[1], new ArrayList<Integer>());
+            }
+            courseToNext.get(prereq[1]).add(prereq[0]);
+            numPrereqs[prereq[0]]++;
+        }
+                
+        Deque<Integer> deque = new ArrayDeque<>();
+
+        int[] path = new int[numCourses];
+        int index = 0;
+
+        for(int i = 0; i < numCourses; i++) {
+            if(numPrereqs[i] == 0) {
+                deque.add(i);
+            }
+        }
+
+        while(deque.size() > 0) {
+            int currSize = deque.size();
+
+            for(int i = 0; i < currSize; i++) {
+                int currCourse = deque.removeFirst();
+
+                path[index++] = currCourse;
+
+                List<Integer> nextList = courseToNext.get(currCourse);
+
+                if(nextList != null) {
+                    for(int next: nextList) {
+                        numPrereqs[next]--;
+                        if(numPrereqs[next] == 0) {
+                            deque.addLast(next);
+                        }
+                    }
+                }
+            }
+        }
+
+        return index == numCourses ? path : new int[0];
+    }
+}
