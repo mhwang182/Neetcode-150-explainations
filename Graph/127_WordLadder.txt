@@ -1,0 +1,84 @@
+Notes:
+- Trick is to build an adjacency graph with the possible words that could be 1 letter different
+    Ex: *og: [dog, log, cog]
+
+Explanation: 
+- Build adjancency map
+    - for each word in wordList
+        for every i index in word
+            - get key by replacing i with '*' and add to the list of key in map
+
+- Create visited set
+- Create deque
+- add beginWord to visited set and deque
+- create count = 1
+- while deque not empty
+    - for every currWord in current size of deque
+        - loop and get every key aka every '*' combo
+            - for every adjancent word
+                - if next word == endWord
+                    - return count + 1
+                - if not visited
+                    - add to visited set
+                    - add to back of deque 
+    - increment count
+
+- return 0 
+
+
+
+class Solution {
+    public int ladderLength(String beginWord, String endWord, List<String> wordList) {
+        
+        Map<String, List<String>> keyToWords = new HashMap<>();
+
+        for(String word: wordList) {
+            for(int i = 0; i < word.length(); i++) {
+                String key = word.substring(0, i) + "*";
+                if(i + 1 < word.length()) {
+                    key += word.substring(i + 1);
+                }
+
+                if(!keyToWords.containsKey(key)) {
+                    keyToWords.put(key, new ArrayList<String>());
+                }
+                keyToWords.get(key).add(word);
+            }
+        }
+
+        Set<String> visited = new HashSet<>();
+
+        Deque<String> deque = new ArrayDeque<String>();
+
+        deque.add(beginWord);
+        visited.add(beginWord);
+
+        int count = 1;
+        while(!deque.isEmpty()) {
+            int currSize = deque.size();
+            for(int i = 0; i < currSize; i++) {
+                String currWord = deque.removeFirst();
+                for(int j = 0; j < currWord.length(); j++) {
+                    String key = currWord.substring(0, j) + "*";
+                    if(j + 1 < currWord.length()) {
+                        key += currWord.substring(j + 1);
+                    }
+                    if(keyToWords.get(key) != null) {
+                        for(String nextWord: keyToWords.get(key)) {
+                            if(nextWord.equals(endWord)) {
+                                return count + 1;
+                            }
+                            if(!visited.contains(nextWord)) {
+                                visited.add(nextWord);
+                                deque.addLast(nextWord);
+                            }
+                        }
+                    }
+                }
+            }
+            count++;
+        }
+
+        return 0;
+    }
+}
